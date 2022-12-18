@@ -1,0 +1,35 @@
+{
+    "name": "pfilsx/postgresql-doctrine",
+    "type": "library",
+    "description": "Extended Doctrine DBAL and Doctrine migrations classes for postgresql specific features support",
+    "license": "MIT",
+    "keywords": [
+        "doctrine",
+        "doctrine-dbal",
+        "doctrine-migrations",
+        "migrations",
+        "postgresql",
+        "enum",
+        "php8"
+    ],
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Pavel Filimonov",
+            "email": "pfilsx@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "doctrine/dbal": "^3.5.1",
+        "doctrine/migrations": "^3.5.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pfilsx\\PostgreSQLDoctrine\\": "src/"
+        }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.13"
+    }
+}
