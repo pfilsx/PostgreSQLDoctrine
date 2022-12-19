@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\Tools;
 
@@ -12,9 +13,9 @@ final class EnumTool
      */
     private static array $checkMap = [];
     /**
-     * @param class-string<\UnitEnum|EnumInterface> $className
-     * @return string
+     * @param class-string<EnumInterface|\UnitEnum> $className
      * @throws InvalidArgumentException
+     * @return string
      */
     public static function getEnumTypeNameFromClassName(string $className): string
     {
@@ -26,9 +27,9 @@ final class EnumTool
     }
 
     /**
-     * @param class-string<\UnitEnum|EnumInterface> $className
-     * @return array<string|int>
+     * @param class-string<EnumInterface|\UnitEnum> $className
      * @throws InvalidArgumentException
+     * @return array<int|string>
      */
     public static function getEnumLabelsByClassName(string $className): array
     {

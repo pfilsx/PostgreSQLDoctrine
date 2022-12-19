@@ -26,7 +26,7 @@ final class EnumTypeAsset extends AbstractAsset
      */
     public function __construct(string $name, string $className, array $labels = [])
     {
-        if ('' === $name) {
+        if ($name === '') {
             throw new InvalidArgumentException('Invalid custom type name specified');
         }
 
@@ -37,8 +37,8 @@ final class EnumTypeAsset extends AbstractAsset
 
     /**
      * @param class-string<EnumInterface|\UnitEnum> $className
-     * @return static
      * @throws InvalidArgumentException
+     * @return static
      */
     public static function fromEnumClassName(string $className): self
     {
@@ -64,8 +64,8 @@ final class EnumTypeAsset extends AbstractAsset
 
     /**
      * @param AbstractPlatform $platform
-     * @return array<int|string>
      * @throws InvalidArgumentException
+     * @return array<int|string>
      */
     public function getQuotedLabels(AbstractPlatform $platform): array
     {

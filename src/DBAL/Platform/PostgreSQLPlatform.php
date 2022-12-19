@@ -31,8 +31,8 @@ final class PostgreSQLPlatform extends BasePlatform
 
     /**
      * @param EnumTypeAsset $type
-     * @return string
      * @throws Exception\InvalidArgumentException
+     * @return string
      */
     public function getCreateTypeSql(EnumTypeAsset $type): string
     {

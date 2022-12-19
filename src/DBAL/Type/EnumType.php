@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\DBAL\Type;
 
-
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
@@ -18,8 +17,8 @@ class EnumType extends Type
     /**
      * @param array<string,mixed> $column
      * @param AbstractPlatform $platform
-     * @return string
      * @throws Exception\InvalidArgumentException
+     * @return string
      */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
@@ -29,7 +28,7 @@ class EnumType extends Type
 
         $enumClass = $column['enumType'] ?? null;
 
-        if (null === $enumClass) {
+        if ($enumClass === null) {
             throw new \InvalidArgumentException("Incomplete definition. 'enumType' required.");
         }
 
@@ -42,7 +41,7 @@ class EnumType extends Type
     }
 
     /**
-     * @param \UnitEnum|int|string $value
+     * @param int|string|\UnitEnum $value
      * @param AbstractPlatform $platform
      * @return int|string
      */

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\DBAL\Schema;
 
-
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\Identifier;
 use Doctrine\DBAL\Types\JsonType;
@@ -126,7 +125,7 @@ SQL;
 
         if (strtolower($tableColumn['type']) === 'varchar' || strtolower($tableColumn['type']) === 'bpchar') {
             // get length from varchar definition
-            $length                = preg_replace('~.*\(([0-9]*)\).*~', '$1', $tableColumn['complete_type']);
+            $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $tableColumn['complete_type']);
             $tableColumn['length'] = $length;
         }
 
@@ -139,8 +138,8 @@ SQL;
             && preg_match("/^nextval\('(.*)'(::.*)?\)$/", $tableColumn['default'], $matches) === 1
         ) {
             $tableColumn['sequence'] = $matches[1];
-            $tableColumn['default']  = null;
-            $autoincrement           = true;
+            $tableColumn['default'] = null;
+            $autoincrement = true;
         }
 
         if ($tableColumn['default'] !== null) {
@@ -171,8 +170,8 @@ SQL;
         }
 
         $precision = null;
-        $scale     = null;
-        $jsonb     = null;
+        $scale = null;
+        $jsonb = null;
 
         $dbType = strtolower($tableColumn['type']);
         if (
@@ -180,12 +179,12 @@ SQL;
             && $tableColumn['domain_type'] !== ''
             && ! $this->_platform->hasDoctrineTypeMappingFor($tableColumn['type'])
         ) {
-            $dbType                       = strtolower($tableColumn['domain_type']);
+            $dbType = strtolower($tableColumn['domain_type']);
             $tableColumn['complete_type'] = $tableColumn['domain_complete_type'];
         }
 
-        $type                   = $this->_platform->getDoctrineTypeMapping($dbType);
-        $type                   = $this->extractDoctrineTypeFromComment($tableColumn['comment'], $type);
+        $type = $this->_platform->getDoctrineTypeMapping($dbType);
+        $type = $this->extractDoctrineTypeFromComment($tableColumn['comment'], $type);
         $tableColumn['comment'] = $this->removeDoctrineTypeFromComment($tableColumn['comment'], $type);
 
         switch ($dbType) {
@@ -197,7 +196,8 @@ SQL;
             case 'int8':
             case 'integer':
                 $tableColumn['default'] = $this->fixVersion94NegativeNumericDefaultValue($tableColumn['default']);
-                $length                 = null;
+                $length = null;
+
                 break;
 
             case 'bool':
@@ -211,21 +211,25 @@ SQL;
                 }
 
                 $length = null;
+
                 break;
 
             case 'text':
             case '_varchar':
             case 'varchar':
                 $tableColumn['default'] = $this->parseDefaultExpression($tableColumn['default']);
-                $fixed                  = false;
+                $fixed = false;
+
                 break;
             case 'interval':
                 $fixed = false;
+
                 break;
 
             case 'char':
             case 'bpchar':
                 $fixed = true;
+
                 break;
 
             case 'float':
@@ -247,19 +251,21 @@ SQL;
                     ) === 1
                 ) {
                     $precision = $match[1];
-                    $scale     = $match[2];
-                    $length    = null;
+                    $scale = $match[2];
+                    $length = null;
                 }
 
                 break;
 
             case 'year':
                 $length = null;
+
                 break;
 
             // PostgreSQL 9.4+ only
             case 'jsonb':
                 $jsonb = true;
+
                 break;
         }
 
@@ -274,15 +280,15 @@ SQL;
         }
 
         $options = [
-            'length'        => $length,
-            'notnull'       => (bool) $tableColumn['isnotnull'],
-            'default'       => $tableColumn['default'],
-            'precision'     => $precision,
-            'scale'         => $scale,
-            'fixed'         => $fixed,
-            'unsigned'      => false,
+            'length' => $length,
+            'notnull' => (bool) $tableColumn['isnotnull'],
+            'default' => $tableColumn['default'],
+            'precision' => $precision,
+            'scale' => $scale,
+            'fixed' => $fixed,
+            'unsigned' => false,
             'autoincrement' => $autoincrement,
-            'comment'       => isset($tableColumn['comment']) && $tableColumn['comment'] !== ''
+            'comment' => isset($tableColumn['comment']) && $tableColumn['comment'] !== ''
                 ? $tableColumn['comment']
                 : null,
         ];
@@ -347,12 +353,12 @@ SQL;
         if ($tableName !== null) {
             if (str_contains($tableName, '.')) {
                 [$schemaName, $tableName] = explode('.', $tableName);
-                $conditions[]             = 'n.nspname = ' . $this->_platform->quoteStringLiteral($schemaName);
+                $conditions[] = 'n.nspname = ' . $this->_platform->quoteStringLiteral($schemaName);
             } else {
                 $conditions[] = 'n.nspname = ANY(current_schemas(false))';
             }
 
-            $identifier   = new Identifier($tableName);
+            $identifier = new Identifier($tableName);
             $conditions[] = 'c.relname = ' . $this->_platform->quoteStringLiteral($identifier->getName());
         }
 

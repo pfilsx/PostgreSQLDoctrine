@@ -37,8 +37,8 @@ final class SchemaTool extends BaseTool
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em);
-        $this->em            = $em;
-        $this->platform      = $em->getConnection()->getDatabasePlatform();
+        $this->em = $em;
+        $this->platform = $em->getConnection()->getDatabasePlatform();
         $this->quoteStrategy = $em->getConfiguration()->getQuoteStrategy();
         $this->schemaManager = method_exists(Connection::class, 'createSchemaManager')
             ? $em->getConnection()->createSchemaManager()
@@ -47,22 +47,22 @@ final class SchemaTool extends BaseTool
 
     /**
      * @param ClassMetadata[] $classes
-     * @return Schema
      * @throws MappingException
      * @throws NotSupported
      * @throws SchemaException
      * @throws \Doctrine\DBAL\Exception
+     * @return Schema
      */
     public function getSchemaFromMetadata(array $classes): Schema
     {
         // Reminder for processed classes, used for hierarchies
-        $processedClasses     = [];
-        $eventManager         = $this->em->getEventManager();
+        $processedClasses = [];
+        $eventManager = $this->em->getEventManager();
         $metadataSchemaConfig = $this->schemaManager->createSchemaConfig();
 
         $schema = new Schema([], [], $metadataSchemaConfig);
 
-        $addedFks       = [];
+        $addedFks = [];
         $blacklistedFks = [];
 
         foreach ($classes as $class) {
@@ -106,7 +106,7 @@ final class SchemaTool extends BaseTool
                     $this->addDiscriminatorColumnDefinition($class, $table);
                 } else {
                     // Add an ID FK column to child tables
-                    $pkColumns           = [];
+                    $pkColumns = [];
                     $inheritedKeyColumns = [];
 
                     foreach ($class->identifier as $identifierField) {
@@ -120,7 +120,7 @@ final class SchemaTool extends BaseTool
                             );
                             $table->getColumn($columnName)->setAutoincrement(false);
 
-                            $pkColumns[]           = $columnName;
+                            $pkColumns[] = $columnName;
                             $inheritedKeyColumns[] = $columnName;
 
                             continue;
@@ -146,7 +146,7 @@ final class SchemaTool extends BaseTool
                                         $this->platform
                                     );
 
-                                    $pkColumns[]           = $columnName;
+                                    $pkColumns[] = $columnName;
                                     $inheritedKeyColumns[] = $columnName;
                                 }
                             }
@@ -229,6 +229,7 @@ final class SchemaTool extends BaseTool
                     foreach ($table->getIndexes() as $tableIndexName => $tableIndex) {
                         if ($tableIndex->isFullfilledBy($uniqIndex)) {
                             $table->dropIndex($tableIndexName);
+
                             break;
                         }
                     }
@@ -246,7 +247,7 @@ final class SchemaTool extends BaseTool
             $processedClasses[$class->name] = true;
 
             if ($class->isIdGeneratorSequence() && $class->name === $class->rootEntityName) {
-                $seqDef     = $class->sequenceGeneratorDefinition;
+                $seqDef = $class->sequenceGeneratorDefinition;
                 $quotedName = $this->quoteStrategy->getSequenceName($seqDef, $class, $this->platform);
                 if (! $schema->hasSequence($quotedName)) {
                     $schema->createSequence(
@@ -330,14 +331,14 @@ final class SchemaTool extends BaseTool
         $columnName = $this->quoteStrategy->getColumnName($mapping['fieldName'], $class, $this->platform);
         $columnType = $mapping['type'];
 
-        $options            = [];
-        $options['length']  = $mapping['length'] ?? null;
+        $options = [];
+        $options['length'] = $mapping['length'] ?? null;
         $options['notnull'] = isset($mapping['nullable']) ? ! $mapping['nullable'] : true;
         if ($class->isInheritanceTypeSingleTable() && $class->parentClasses) {
             $options['notnull'] = false;
         }
 
-        $options['platformOptions']            = [];
+        $options['platformOptions'] = [];
         $options['platformOptions']['version'] = $class->isVersioned && $class->versionField === $mapping['fieldName'];
 
         if (strtolower($columnType) === 'string' && $options['length'] === null) {
@@ -409,7 +410,7 @@ final class SchemaTool extends BaseTool
             return [];
         }
 
-        $options                        = array_intersect_key($mappingOptions, array_flip(self::KNOWN_COLUMN_OPTIONS));
+        $options = array_intersect_key($mappingOptions, array_flip(self::KNOWN_COLUMN_OPTIONS));
         $options['customSchemaOptions'] = array_diff_key($mappingOptions, $options);
 
         return $options;
@@ -522,10 +523,10 @@ final class SchemaTool extends BaseTool
         array &$addedFks,
         array &$blacklistedFks
     ): void {
-        $localColumns      = [];
-        $foreignColumns    = [];
-        $fkOptions         = [];
-        $foreignTableName  = $this->quoteStrategy->getTableName($class, $this->platform);
+        $localColumns = [];
+        $foreignColumns = [];
+        $fkOptions = [];
+        $foreignTableName = $this->quoteStrategy->getTableName($class, $this->platform);
         $uniqueConstraints = [];
 
         foreach ($joinColumns as $joinColumn) {
@@ -542,7 +543,7 @@ final class SchemaTool extends BaseTool
                 );
             }
 
-            $quotedColumnName    = $this->quoteStrategy->getJoinColumnName($joinColumn, $class, $this->platform);
+            $quotedColumnName = $this->quoteStrategy->getJoinColumnName($joinColumn, $class, $this->platform);
             $quotedRefColumnName = $this->quoteStrategy->getReferencedJoinColumnName(
                 $joinColumn,
                 $class,
@@ -550,8 +551,8 @@ final class SchemaTool extends BaseTool
             );
 
             $primaryKeyColumns[] = $quotedColumnName;
-            $localColumns[]      = $quotedColumnName;
-            $foreignColumns[]    = $quotedRefColumnName;
+            $localColumns[] = $quotedColumnName;
+            $foreignColumns[] = $quotedRefColumnName;
 
             if (! $theJoinTable->hasColumn($quotedColumnName)) {
                 // Only add the column to the table if it does not exist already.
@@ -579,7 +580,7 @@ final class SchemaTool extends BaseTool
                 }
 
                 if ($fieldMapping['type'] === 'decimal') {
-                    $columnOptions['scale']     = $fieldMapping['scale'];
+                    $columnOptions['scale'] = $fieldMapping['scale'];
                     $columnOptions['precision'] = $fieldMapping['precision'];
                 }
 
@@ -607,15 +608,16 @@ final class SchemaTool extends BaseTool
         if (
             isset($addedFks[$compositeName])
             && ($foreignTableName !== $addedFks[$compositeName]['foreignTableName']
-                || 0 < count(array_diff($foreignColumns, $addedFks[$compositeName]['foreignColumns'])))
+                || count(array_diff($foreignColumns, $addedFks[$compositeName]['foreignColumns'])) > 0)
         ) {
             foreach ($theJoinTable->getForeignKeys() as $fkName => $key) {
                 if (
                     count(array_diff($key->getLocalColumns(), $localColumns)) === 0
                     && (($key->getForeignTableName() !== $foreignTableName)
-                        || 0 < count(array_diff($key->getForeignColumns(), $foreignColumns)))
+                        || count(array_diff($key->getForeignColumns(), $foreignColumns)) > 0)
                 ) {
                     $theJoinTable->removeForeignKey($fkName);
+
                     break;
                 }
             }
@@ -677,13 +679,13 @@ final class SchemaTool extends BaseTool
             ! isset($discrColumn['type']) ||
             (strtolower($discrColumn['type']) === 'string' && ! isset($discrColumn['length']))
         ) {
-            $discrColumn['type']   = 'string';
+            $discrColumn['type'] = 'string';
             $discrColumn['length'] = 255;
         }
 
         $options = [
-            'length'    => $discrColumn['length'] ?? null,
-            'notnull'   => true,
+            'length' => $discrColumn['length'] ?? null,
+            'notnull' => true,
         ];
 
         if (isset($discrColumn['columnDefinition'])) {
@@ -739,12 +741,12 @@ final class SchemaTool extends BaseTool
     private function gatherEnumTypes(ClassMetadata $metadata, Schema $schema): void
     {
         foreach ($metadata->fieldMappings as $field) {
-            if (EnumType::NAME !== $field['type']) {
+            if ($field['type'] !== EnumType::NAME) {
                 continue;
             }
             $enumTypeClass = $field['enumType'] ?? null;
 
-            if (null === $enumTypeClass || !\class_exists($enumTypeClass)) {
+            if ($enumTypeClass === null || !\class_exists($enumTypeClass)) {
                 throw new SchemaException('The option "enumType" has to be specified and has to be a real fully qualified class name.');
             }
 

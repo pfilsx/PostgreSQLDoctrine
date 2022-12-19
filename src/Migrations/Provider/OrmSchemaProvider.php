@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Pfilsx\PostgreSQLDoctrine\Tools\SchemaTool;
 
-final class SchemaProvider implements BaseSchemaProvider
+final class OrmSchemaProvider implements BaseSchemaProvider
 {
     private EntityManagerInterface $entityManager;
 
@@ -26,7 +26,7 @@ final class SchemaProvider implements BaseSchemaProvider
         /** @var array<int, ClassMetadata<object>> $metadata */
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
-        if (0 === \count($metadata)) {
+        if (\count($metadata) === 0) {
             throw NoMappingFound::new();
         }
 

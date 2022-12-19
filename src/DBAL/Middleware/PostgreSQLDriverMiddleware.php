@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\DBAL\Middleware;
 
-
 use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Driver\Middleware;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
