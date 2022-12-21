@@ -6,6 +6,7 @@ namespace Pfilsx\PostgreSQLDoctrine\DBAL\Platform;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform as BasePlatform;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\EnumTypeAsset;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\PostgreSQLSchemaManager;
@@ -44,14 +45,43 @@ final class PostgreSQLPlatform extends BasePlatform
         return "COMMENT ON TYPE {$type->getQuotedName($this)} IS '{$type->getEnumClass()}'";
     }
 
-    public function getAlterTypeSql(EnumTypeAsset $from, EnumTypeAsset $to): string
+    /**
+     * @param EnumTypeAsset $from
+     * @param EnumTypeAsset $to
+     * @throws Exception
+     * @return string[]
+     */
+    public function getAlterTypeSql(EnumTypeAsset $from, EnumTypeAsset $to): array
     {
-        throw Exception::notSupported(__METHOD__);
+        $fromLabels = $from->getLabels();
+        $toLabels = $to->getLabels();
+
+        $result = [];
+        foreach (array_diff($toLabels, $fromLabels) as $label) {
+            $result[] = "ALTER TYPE {$to->getQuotedName($this)} ADD VALUE {$this->quoteEnumLabel($label)}";
+        }
+
+        if (count(array_diff($fromLabels, $toLabels)) > 0) {
+            throw new Exception('Enum labels reduction is not supported in automatic generation');
+        }
+
+        return $result;
     }
 
     public function getDropTypeSql(EnumTypeAsset $type): string
     {
         return "DROP TYPE {$type->getQuotedName($this)}";
+    }
+
+    public function quoteEnumLabel(mixed $label): int|string
+    {
+        if (\is_string($label)) {
+            return $this->quoteStringLiteral($label);
+        } elseif (\is_int($label)) {
+            return $label;
+        } else {
+            throw new InvalidArgumentException('Invalid custom type labels specified. Only string and integers are supported');
+        }
     }
 
     protected function initializeDoctrineTypeMappings()

@@ -24,6 +24,7 @@ $config
         'declare_strict_types' => true,
         'no_superfluous_phpdoc_tags' => false,
         'yoda_style' => ['equal' => false, 'identical'=>false, 'less_and_greater' => false],
+        'no_unused_imports' => true,
     ])
     ->setUsingCache(false)
     ->setFinder($finder)

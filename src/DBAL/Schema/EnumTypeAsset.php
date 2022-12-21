@@ -8,6 +8,7 @@ use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractAsset;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Contract\EnumInterface;
+use Pfilsx\PostgreSQLDoctrine\DBAL\Platform\PostgreSQLPlatform;
 use Pfilsx\PostgreSQLDoctrine\Tools\EnumTool;
 
 final class EnumTypeAsset extends AbstractAsset
@@ -69,15 +70,13 @@ final class EnumTypeAsset extends AbstractAsset
      */
     public function getQuotedLabels(AbstractPlatform $platform): array
     {
+        if (!$platform instanceof PostgreSQLPlatform) {
+            return array_map(static fn ($label) => $platform->quoteStringLiteral((string) $label), $this->labels);
+        }
+
         $result = [];
         foreach ($this->labels as $label) {
-            if (\is_string($label)) {
-                $result[] = $platform->quoteStringLiteral($label);
-            } elseif (\is_int($label)) {
-                $result[] = $label;
-            } else {
-                throw new InvalidArgumentException('Invalid custom type labels specified. Only string and integers are supported');
-            }
+            $result[] = $platform->quoteEnumLabel($label);
         }
 
         return $result;
