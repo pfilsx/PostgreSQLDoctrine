@@ -10,9 +10,11 @@ use Doctrine\DBAL\Driver\API\ExceptionConverter;
 use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Platform\PostgreSQLPlatform;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\PostgreSQLSchemaManager;
+use Pfilsx\PostgreSQLDoctrine\DBAL\Type\EnumType;
 
 final class PostgreSQLDriverWrapper implements VersionAwarePlatformDriver
 {
@@ -21,6 +23,9 @@ final class PostgreSQLDriverWrapper implements VersionAwarePlatformDriver
     public function __construct(Driver $innerDriver)
     {
         $this->innerDriver = $innerDriver;
+        if (!Type::hasType(EnumType::NAME)) {
+            Type::addType(EnumType::NAME, EnumType::class);
+        }
     }
 
 
