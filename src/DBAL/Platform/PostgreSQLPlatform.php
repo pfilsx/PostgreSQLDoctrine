@@ -84,7 +84,7 @@ final class PostgreSQLPlatform extends BasePlatform
         }
     }
 
-    protected function initializeDoctrineTypeMappings()
+    protected function initializeDoctrineTypeMappings(): void
     {
         parent::initializeDoctrineTypeMappings();
 

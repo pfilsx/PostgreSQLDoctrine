@@ -67,6 +67,7 @@ final class SchemaDiff extends BaseSchemaDiff
 
         foreach ($this->getCreatedTypes() as $type) {
             $sql[] = $platform->getCreateTypeSql($type);
+            $sql[] = $platform->getCommentOnTypeSql($type);
         }
 
         foreach ($this->getAlteredTypes() as $alterTypeArray) {
