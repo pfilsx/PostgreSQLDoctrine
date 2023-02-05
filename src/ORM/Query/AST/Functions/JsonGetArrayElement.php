@@ -18,18 +18,15 @@ final class JsonGetArrayElement extends JsonGetField
     {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
-
         $this->field = $parser->StringPrimary();
         $parser->match(Lexer::T_COMMA);
         $this->path[] = $parser->ArithmeticPrimary();
-
         if (!$parser->getLexer()->isNextToken(Lexer::T_CLOSE_PARENTHESIS)) {
             while ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
                 $parser->match(Lexer::T_COMMA);
                 $this->path[] = $parser->ArithmeticPrimary();
             }
         }
-
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 }
