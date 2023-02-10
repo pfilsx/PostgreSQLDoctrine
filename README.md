@@ -12,12 +12,16 @@ Features
 * PostgreSQL enums support in DBAL and migrations
 * PHP8 enum support
 * Fix creating [default schema in down migrations for pgsql](https://github.com/doctrine/dbal/issues/1110)
+* [JSON(B) functions](https://www.postgresql.org/docs/current/functions-json.html) (in progress)
+* JSON(B) types based on object models (in progress, requires symfony/serializer)
 
 Requirement
 -----------
 * PHP ^8.1
 * doctrine/dbal ^3.5.1
 * doctrine/migrations ^3.5.2
+* symfony/serializer >=5.4.* (optional for json models)
+* symfony/property-info >=5.4.* (optional)
 
 Installation
 ------------

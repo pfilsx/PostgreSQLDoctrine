@@ -8,9 +8,11 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform as BasePlatform;
+use Doctrine\DBAL\Schema\Column;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\EnumTypeAsset;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\PostgreSQLSchemaManager;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\EnumType;
+use Pfilsx\PostgreSQLDoctrine\DBAL\Type\JsonModelType;
 
 final class PostgreSQLPlatform extends BasePlatform
 {
@@ -82,6 +84,23 @@ final class PostgreSQLPlatform extends BasePlatform
         } else {
             throw new InvalidArgumentException('Invalid custom type labels specified. Only string and integers are supported');
         }
+    }
+
+    public function columnsEqual(Column $column1, Column $column2): bool
+    {
+        if (parent::columnsEqual($column1, $column2)) {
+            return true;
+        }
+
+        $type1 = $column1->getType();
+        $type2 = $column2->getType();
+
+        if (!is_subclass_of($type1, JsonModelType::class) && !is_subclass_of($type2, JsonModelType::class)) {
+            return false;
+        }
+
+        return is_subclass_of($type1, $type2::class) || is_subclass_of($type2, $type1::class);
+
     }
 
     protected function initializeDoctrineTypeMappings(): void
