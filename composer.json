@@ -31,6 +31,8 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.13",
-        "doctrine/orm": "^2.13"
+        "doctrine/orm": "^2.13",
+        "symfony/serializer": ">=5.4",
+        "symfony/property-info": ">=5.4"
     }
 }
