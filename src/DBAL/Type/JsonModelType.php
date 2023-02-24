@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 abstract class JsonModelType extends JsonType
 {
-    private ?AbstractObjectNormalizer $normalizer = null;
+    private null|AbstractObjectNormalizer|TraceableNormalizer $normalizer = null;
 
     abstract public static function getTypeName(): string;
 

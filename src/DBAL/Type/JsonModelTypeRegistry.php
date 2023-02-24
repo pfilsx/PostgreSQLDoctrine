@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 final class JsonModelTypeRegistry
 {
-    private static AbstractObjectNormalizer $objectNormalizer;
+    private static AbstractObjectNormalizer|TraceableNormalizer $objectNormalizer;
 
     private static array $typesMap = [];
 
