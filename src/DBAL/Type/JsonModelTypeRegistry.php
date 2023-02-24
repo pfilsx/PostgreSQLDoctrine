@@ -7,6 +7,7 @@ namespace Pfilsx\PostgreSQLDoctrine\DBAL\Type;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Types\Type;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\Serializer\Debug\TraceableNormalizer;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -21,8 +22,8 @@ final class JsonModelTypeRegistry
      * @param string $name
      * @param class-string $className
      * @param bool $override
-     * @return void
      * @throws Exception
+     * @return void
      */
     public static function addType(string $name, string $className, bool $override = false): void
     {
@@ -44,14 +45,14 @@ final class JsonModelTypeRegistry
         return array_key_exists($name, self::$typesMap);
     }
 
-    public static function getObjectNormalizer(): AbstractObjectNormalizer
+    public static function getObjectNormalizer(): AbstractObjectNormalizer|TraceableNormalizer
     {
         return self::$objectNormalizer ??= new ObjectNormalizer(
             nameConverter: new CamelCaseToSnakeCaseNameConverter(),
             propertyTypeExtractor: new ReflectionExtractor()
         );
     }
-    public static function setObjectNormalizer(AbstractObjectNormalizer $objectNormalizer): void
+    public static function setObjectNormalizer(AbstractObjectNormalizer|TraceableNormalizer $objectNormalizer): void
     {
         self::$objectNormalizer = $objectNormalizer;
     }
