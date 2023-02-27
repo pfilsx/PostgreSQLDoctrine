@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace Pfilsx\PostgreSQLDoctrine\DBAL\Schema;
 
 use Doctrine\DBAL\Schema\Comparator as BaseComparator;
+use Doctrine\DBAL\Schema\Schema as BaseSchema;
+use Doctrine\DBAL\Schema\SchemaDiff as BaseSchemaDiff;
 
 final class Comparator extends BaseComparator
 {
-    public function compareSchemas(Schema $fromSchema, Schema $toSchema): SchemaDiff
+    public function compareSchemas(BaseSchema $fromSchema, BaseSchema $toSchema): BaseSchemaDiff
     {
         $baseDiff = parent::compareSchemas($fromSchema, $toSchema);
+
+        if (!$fromSchema instanceof Schema || !$toSchema instanceof Schema) {
+            return $baseDiff;
+        }
 
         $createdTypes = [];
         $alteredTypes = [];
