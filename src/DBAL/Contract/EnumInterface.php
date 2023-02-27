@@ -7,7 +7,7 @@ namespace Pfilsx\PostgreSQLDoctrine\DBAL\Contract;
 interface EnumInterface
 {
     /**
-     * @return array<int|string>
+     * @return string[]
      */
     public static function cases(): array;
 }
