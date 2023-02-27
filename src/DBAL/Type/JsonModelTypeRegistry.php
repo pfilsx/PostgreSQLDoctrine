@@ -65,7 +65,11 @@ final class JsonModelTypeRegistry
             $type = new $className();
             $type->setObjectNormalizer($objectNormalizer);
 
-            $typeRegistry->register($name, $type);
+            if ($typeRegistry->has($name)) {
+                $typeRegistry->override($name, $type);
+            } else {
+                $typeRegistry->register($name, $type);
+            }
         }
     }
 }
