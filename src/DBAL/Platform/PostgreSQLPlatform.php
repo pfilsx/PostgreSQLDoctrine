@@ -23,13 +23,29 @@ final class PostgreSQLPlatform extends BasePlatform
 
     public function getListEnumTypesSQL(): string
     {
-        return 'SELECT pg_type.typname AS name,
-                       pg_enum.enumlabel AS label,
-                       pg_description.description AS comment
-                FROM pg_type
-                JOIN pg_enum ON pg_enum.enumtypid = pg_type.oid
-                LEFT JOIN pg_description on pg_description.objoid = pg_type.oid
-                ORDER BY pg_enum.enumsortorder';
+        return 'WITH types AS (
+                    SELECT pg_type.typname            AS name,
+                           pg_enum.enumlabel          AS label,
+                           pg_enum.enumsortorder      AS label_order,
+                           pg_description.description AS comment,
+                           pg_class.relname           AS usage_table,
+                           pg_attribute.attname       AS usage_column,
+                           PG_GET_EXPR(pg_attrdef.adbin, pg_attrdef.adrelid) AS usage_default
+                    FROM pg_type
+                        JOIN pg_enum ON pg_enum.enumtypid = pg_type.oid
+                        LEFT JOIN pg_description ON pg_description.objoid = pg_type.oid
+                        LEFT JOIN pg_depend ON pg_depend.refobjid = pg_type.oid
+                        LEFT JOIN pg_class ON pg_class.oid = pg_depend.objid
+                        LEFT JOIN pg_attribute ON pg_attribute.attrelid = pg_class.oid AND pg_attribute.atttypid = pg_type.oid
+                        LEFT JOIN pg_attrdef ON pg_attrdef.adrelid = pg_class.oid AND pg_attrdef.adnum = pg_attribute.attnum
+                )
+                SELECT types.name,
+                       types.comment,
+                       JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(\'label\', types.label, \'order\', types.label_order)) AS labels,
+                       JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(\'table\', types.usage_table, \'column\', types.usage_column, \'default\', types.usage_default)) FILTER (WHERE types.usage_table IS NOT NULL AND types.usage_column IS NOT NULL) AS usages
+                FROM types
+                GROUP BY types.name, types.comment'
+            ;
     }
 
     /**
@@ -59,13 +75,48 @@ final class PostgreSQLPlatform extends BasePlatform
         $toLabels = $to->getLabels();
 
         $result = [];
+        $typeName = $to->getQuotedName($this);
+
         foreach (array_diff($toLabels, $fromLabels) as $label) {
-            $result[] = "ALTER TYPE {$to->getQuotedName($this)} ADD VALUE {$this->quoteEnumLabel($label)}";
+            $result[] = "ALTER TYPE {$typeName} ADD VALUE {$this->quoteEnumLabel($label)}";
         }
 
-        if (count(array_diff($fromLabels, $toLabels)) > 0) {
-            throw new Exception('Enum labels reduction is not supported in automatic generation');
+        $removedLabels = array_diff($fromLabels, $toLabels);
+
+        if (count($removedLabels) < 1) {
+            return $result;
         }
+        
+        $self = $this;
+
+        $result[] = "ALTER TYPE {$typeName} RENAME TO {$typeName}_old";
+        $result[] = $this->getCreateTypeSql($to);
+        $result[] = $this->getCommentOnTypeSql($to);
+
+        foreach ($to->getUsages() as $usage) {
+            $tableName = $this->quoteIdentifier($usage->getTable());
+            $columnName = $this->quoteIdentifier($usage->getColumn());
+            if (($default = $usage->getDefault()) !== null) {
+                $result[] = sprintf('ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT', $tableName, $columnName);
+            }
+            $result[] = sprintf(
+                'ALTER TABLE %1$s ALTER COLUMN %2$s TYPE %3$s USING LOWER(%2$s::text)::%3$s',
+                $tableName,
+                $columnName,
+                $typeName
+            );
+
+            if ($default !== null) {
+                $result[] = sprintf(
+                    'ALTER TABLE %s ALTER COLUMN %s SET DEFAULT %s',
+                    $tableName,
+                    $columnName,
+                    $this->quoteEnumLabel($default)
+                );
+            }
+        }
+
+        $result[] = "DROP TYPE {$typeName}_old";
 
         return $result;
     }

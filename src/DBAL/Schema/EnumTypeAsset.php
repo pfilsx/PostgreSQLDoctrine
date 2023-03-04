@@ -14,18 +14,23 @@ use Pfilsx\PostgreSQLDoctrine\Tools\EnumTool;
 final class EnumTypeAsset extends AbstractAsset
 {
     /**
-     * @var array<int|string>
+     * @var string[]
      */
     private array $labels;
     private string $enumClass;
+    /**
+     * @var EnumTypeUsageAsset[]
+     */
+    private array $usages;
 
     /**
      * @param string $name
      * @param string $className
-     * @param array<int|string> $labels
+     * @param string[] $labels
+     * @param EnumTypeUsageAsset[] $usages
      * @throws InvalidArgumentException
      */
-    public function __construct(string $name, string $className, array $labels = [])
+    public function __construct(string $name, string $className, array $labels = [], array $usages = [])
     {
         if ($name === '') {
             throw new InvalidArgumentException('Invalid custom type name specified');
@@ -34,6 +39,7 @@ final class EnumTypeAsset extends AbstractAsset
         $this->_setName($name);
         $this->enumClass = $className;
         $this->labels = $labels;
+        $this->usages = $usages;
     }
 
     /**
@@ -41,17 +47,17 @@ final class EnumTypeAsset extends AbstractAsset
      * @throws InvalidArgumentException
      * @return static
      */
-    public static function fromEnumClassName(string $className): self
+    public static function fromEnumClassName(string $name, string $className): self
     {
         return new self(
-            EnumTool::getEnumTypeNameFromClassName($className),
+            $name,
             $className,
             EnumTool::getEnumLabelsByClassName($className)
         );
     }
 
     /**
-     * @return array<int|string>
+     * @return string[]
      */
     public function getLabels(): array
     {
@@ -61,6 +67,21 @@ final class EnumTypeAsset extends AbstractAsset
     public function getEnumClass(): string
     {
         return $this->enumClass;
+    }
+
+    public function addUsage(EnumTypeUsageAsset $usage): self
+    {
+        $this->usages[] = $usage;
+
+        return $this;
+    }
+
+    /**
+     * @return EnumTypeUsageAsset[]
+     */
+    public function getUsages(): array
+    {
+        return $this->usages;
     }
 
     /**

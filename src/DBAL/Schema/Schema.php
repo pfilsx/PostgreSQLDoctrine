@@ -13,7 +13,7 @@ final class Schema extends BaseSchema
     /**
      * @var EnumTypeAsset[]
      */
-    private array $enumTypes = [];
+    private array $_enumTypes = [];
 
     public function __construct(
         array $tables = [],
@@ -25,7 +25,7 @@ final class Schema extends BaseSchema
         parent::__construct($tables, $sequences, $schemaConfig, $namespaces);
 
         foreach ($types as $type) {
-            $this->addEnumType($type);
+            $this->addEnumType($type->getName(), $type);
         }
     }
 
@@ -46,7 +46,7 @@ final class Schema extends BaseSchema
      */
     public function getEnumTypes(): array
     {
-        return $this->enumTypes;
+        return $this->_enumTypes;
     }
 
     public function getEnumType(string $name): EnumTypeAsset
@@ -56,25 +56,25 @@ final class Schema extends BaseSchema
             throw new SchemaException("There exists no enum type with the name \"$name\".");
         }
 
-        return $this->enumTypes[$name];
+        return $this->_enumTypes[$name];
     }
 
     public function hasEnumType(string $name): bool
     {
         $name = $this->getFullQualifiedAssetName($name);
 
-        return isset($this->enumTypes[$name]);
+        return isset($this->_enumTypes[$name]);
     }
 
-    public function addEnumType(EnumTypeAsset $type): void
+    public function addEnumType(string $name, EnumTypeAsset $type): void
     {
-        $typeName = $type->getFullQualifiedName($this->getName());
+        $typeName = $this->getFullQualifiedAssetName($name);
 
-        if (isset($this->enumTypes[$typeName])) {
+        if (isset($this->_enumTypes[$typeName])) {
             throw new SchemaException("The enum type \"$typeName\" already exists.");
         }
 
-        $this->enumTypes[$typeName] = $type;
+        $this->_enumTypes[$typeName] = $type;
     }
 
     private function getFullQualifiedAssetName($name): string

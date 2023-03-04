@@ -22,6 +22,7 @@ use Doctrine\ORM\Tools\Exception\NotSupported;
 use Doctrine\ORM\Tools\SchemaTool as BaseTool;
 use Doctrine\ORM\Tools\ToolEvents;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\EnumTypeAsset;
+use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\EnumTypeUsageAsset;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\Schema;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\Table;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\EnumType;
@@ -750,10 +751,33 @@ final class SchemaTool extends BaseTool
                 throw new SchemaException('The option "enumType" has to be specified and has to be a real fully qualified class name.');
             }
 
-            $enumType = EnumTypeAsset::fromEnumClassName($enumTypeClass);
+            $enumName = EnumTool::getEnumTypeNameFromClassName($enumTypeClass);
+
+            $enumType = $schema->hasEnumType($enumName)
+                ? $schema->getEnumType($enumName)
+                : EnumTypeAsset::fromEnumClassName($enumName, $enumTypeClass)
+            ;
+
+            $rawDefault = ($field['options'] ?? [])['default'] ?? null;
+
+            if ($rawDefault instanceof \BackedEnum) {
+                $default = $rawDefault->value;
+            } elseif ($rawDefault instanceof \UnitEnum) {
+                $default = $rawDefault->name;
+            } else {
+                $default = $rawDefault;
+            }
+
+            $enumType->addUsage(
+                new EnumTypeUsageAsset(
+                    $metadata->getTableName(),
+                    $field['columnName'],
+                    $default
+                )
+            );
 
             if (!$schema->hasEnumType($enumType->getName())) {
-                $schema->addEnumType($enumType);
+                $schema->addEnumType($enumName, $enumType);
             }
         }
     }
