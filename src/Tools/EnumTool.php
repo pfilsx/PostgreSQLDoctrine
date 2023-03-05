@@ -29,7 +29,7 @@ final class EnumTool
     /**
      * @param class-string<EnumInterface|\UnitEnum> $className
      * @throws InvalidArgumentException
-     * @return array<int|string>
+     * @return string[]
      */
     public static function getEnumLabelsByClassName(string $className): array
     {

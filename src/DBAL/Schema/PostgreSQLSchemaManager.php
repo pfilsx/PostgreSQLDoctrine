@@ -330,17 +330,29 @@ SQL;
 
     private function getPortableEnumTypesList(array $rawTypes): array
     {
-        $typeGroups = [];
-        foreach ($rawTypes as $rawType) {
-            $typeGroup = $typeGroups[$rawType['name']] ?? [];
-            $typeGroup['comment'] = $rawType['comment'];
-            $typeGroup['labels'][] = $rawType['label'];
-            $typeGroups[$rawType['name']] = $typeGroup;
-        }
-
         $list = [];
-        foreach ($typeGroups as $name => $typeGroup) {
-            $list[] = new EnumTypeAsset($name, $typeGroup['comment'], $typeGroup['labels']);
+        foreach ($rawTypes as $rawType) {
+            $labels = json_decode($rawType['labels'], true);
+            usort($labels, static fn (array $a, array $b) => $a['order'] <=> $b['order']);
+
+            $usages = json_decode($rawType['usages'], true);
+            foreach ($usages as &$usage) {
+                $default = $usage['default'] ?? null;
+                if ($default !== null) {
+                    $default = trim(explode('::', $default)[0], '\'');   
+                }
+                $usage['default'] = $default;
+            }
+            
+            $list[] = new EnumTypeAsset(
+                $rawType['name'],
+                $rawType['comment'],
+                array_column($labels, 'label'),
+                array_map(
+                    static fn (array $usage) => new EnumTypeUsageAsset($usage['table'], $usage['column'], $usage['default']),
+                    $usages
+                )
+            );
         }
 
         return $list;
