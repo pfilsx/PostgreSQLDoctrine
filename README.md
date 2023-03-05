@@ -1,11 +1,15 @@
 PostgreSQL Doctrine
 ==============
 
+[![Latest Stable Version](http://poser.pugx.org/pfilsx/postgresql-doctrine/v)](https://packagist.org/packages/pfilsx/postgresql-doctrine)
+[![PHP Version Require](http://poser.pugx.org/pfilsx/postgresql-doctrine/require/php)](https://packagist.org/packages/pfilsx/postgresql-doctrine)
+[![Total Downloads](http://poser.pugx.org/pfilsx/postgresql-doctrine/downloads)](https://packagist.org/packages/pfilsx/postgresql-doctrine)
+
 Description
 ------------
 
 Provides extended Doctrine DBAL and Doctrine migration classes to allow you to use PostgreSQL 
-specific features such as [enums](https://www.postgresql.org/docs/current/datatype-enum.html) with Doctrine.
+specific features such as [enums](https://www.postgresql.org/docs/current/datatype-enum.html) or JSON(B) with Doctrine.
 
 Features
 --------
@@ -37,3 +41,19 @@ Usage
 Please refer [Doctrine DBAL](https://www.doctrine-project.org/projects/doctrine-dbal/en/current/index.html) 
 and [Doctrine Migrations](https://www.doctrine-project.org/projects/doctrine-migrations/en/3.5/index.html)
 for instructions on how to override the default doctrine classes in your project.
+
+Required steps:
+1. Register [PostgreSQLDriverMiddleware.php](src/DBAL/Middleware/PostgreSQLDriverMiddleware.php) as driver middleware
+2. Register [OrmSchemaProvider.php](src/Migrations/Provider/OrmSchemaProvider.php) as Doctrine\Migrations\Provider\SchemaProvider in Doctrine\Migrations\DependencyFactory
+
+For Symfony integration see [PostgreSQLDoctrineBundle](https://github.com/pfilsx/PostgreSQLDoctrineBundle)
+
+Documentation
+-------------
+
+* [ENUMS](docs/ENUMS.md)
+
+License
+-------
+
+This bundle is released under the MIT license.
