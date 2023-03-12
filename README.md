@@ -18,6 +18,7 @@ Features
 * Fix creating [default schema in down migrations for pgsql](https://github.com/doctrine/dbal/issues/1110)
 * [JSON(B) functions](https://www.postgresql.org/docs/current/functions-json.html) (in progress)
 * JSON(B) types based on object models (in progress, requires symfony/serializer)
+* [Trait](src/ORM/Trait/ExistsMethodRepositoryTrait.php) for easy use of [SELECT EXISTS(...)](https://www.postgresql.org/docs/current/functions-subquery.html#FUNCTIONS-SUBQUERY-EXISTS) in your entity repositories
 
 Requirement
 -----------
