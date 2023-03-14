@@ -13,8 +13,10 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql jsonb contains function
+ * Implementation of PostgreSql jsonb contains function.
+ *
  * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE
+ *
  * @example JSONB_CONTAINS(entity.field, '{"a": 1}')
  */
 final class JsonbContains extends FunctionNode

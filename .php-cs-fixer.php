@@ -7,6 +7,7 @@ $config = new PhpCsFixer\Config();
 $config
     ->setRiskyAllowed(true)
     ->setRules([
+        '@Symfony' => true,
         'align_multiline_comment' => true,
         'array_syntax' => ['syntax' => 'short'],
         'binary_operator_spaces' => [

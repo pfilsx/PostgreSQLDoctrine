@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\Tools;
@@ -12,9 +13,12 @@ final class EnumTool
      * @var array<string, bool>
      */
     private static array $checkMap = [];
+
     /**
      * @param class-string<EnumInterface|\UnitEnum> $className
+     *
      * @throws InvalidArgumentException
+     *
      * @return string
      */
     public static function getEnumTypeNameFromClassName(string $className): string
@@ -28,7 +32,9 @@ final class EnumTool
 
     /**
      * @param class-string<EnumInterface|\UnitEnum> $className
+     *
      * @throws InvalidArgumentException
+     *
      * @return string[]
      */
     public static function getEnumLabelsByClassName(string $className): array
@@ -57,15 +63,11 @@ final class EnumTool
         }
 
         if (!\enum_exists($className) && (!\class_exists($className) || !is_subclass_of($className, EnumInterface::class))) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid enum className specified: %s. Enum class has to be a php8 enum or implements %s', $className, EnumInterface::class)
-            );
+            throw new InvalidArgumentException(sprintf('Invalid enum className specified: %s. Enum class has to be a php8 enum or implements %s', $className, EnumInterface::class));
         }
 
         if (enum_exists($className) && self::isIntBackedEnum($className)) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid enum className specified: %s. PostgreSQL supports only string values for enums', $className)
-            );
+            throw new InvalidArgumentException(sprintf('Invalid enum className specified: %s. PostgreSQL supports only string values for enums', $className));
         }
 
         self::$checkMap[$className] = true;
@@ -73,6 +75,7 @@ final class EnumTool
 
     /**
      * @param class-string<\UnitEnum> $className
+     *
      * @return bool
      */
     private static function isIntBackedEnum(string $className): bool

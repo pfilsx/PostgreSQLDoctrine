@@ -19,7 +19,6 @@ class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaMana
      */
     protected $_platform;
 
-
     public function createSchema(): Schema
     {
         $schemaNames = [];
@@ -161,7 +160,7 @@ SQL;
 
         $fixed = null;
 
-        if (! isset($tableColumn['name'])) {
+        if (!isset($tableColumn['name'])) {
             $tableColumn['name'] = '';
         }
 
@@ -177,7 +176,7 @@ SQL;
         if (
             $tableColumn['domain_type'] !== null
             && $tableColumn['domain_type'] !== ''
-            && ! $this->_platform->hasDoctrineTypeMappingFor($tableColumn['type'])
+            && !$this->_platform->hasDoctrineTypeMappingFor($tableColumn['type'])
         ) {
             $dbType = strtolower($tableColumn['domain_type']);
             $tableColumn['complete_type'] = $tableColumn['domain_complete_type'];
@@ -262,7 +261,7 @@ SQL;
 
                 break;
 
-            // PostgreSQL 9.4+ only
+                // PostgreSQL 9.4+ only
             case 'jsonb':
                 $jsonb = true;
 
@@ -272,7 +271,7 @@ SQL;
         if (
             $tableColumn['default'] !== null && preg_match(
                 "('([^']+)'::)",
-                (string)$tableColumn['default'],
+                (string) $tableColumn['default'],
                 $match,
             ) === 1
         ) {
@@ -303,12 +302,12 @@ SQL;
             }
         }
 
-        if (isset($tableColumn['collation']) && ! empty($tableColumn['collation'])) {
+        if (isset($tableColumn['collation']) && !empty($tableColumn['collation'])) {
             $column->setPlatformOption('collation', $tableColumn['collation']);
         }
 
         if ($column->getType()->getName() === Types::JSON) {
-            if (! $column->getType() instanceof JsonType) {
+            if (!$column->getType() instanceof JsonType) {
                 Deprecation::trigger(
                     'doctrine/dbal',
                     'https://github.com/doctrine/dbal/pull/5049',
@@ -339,11 +338,11 @@ SQL;
             foreach ($usages as &$usage) {
                 $default = $usage['default'] ?? null;
                 if ($default !== null) {
-                    $default = trim(explode('::', $default)[0], '\'');   
+                    $default = trim(explode('::', $default)[0], '\'');
                 }
                 $usage['default'] = $default;
             }
-            
+
             $list[] = new EnumTypeAsset(
                 $rawType['name'],
                 $rawType['comment'],
@@ -392,7 +391,7 @@ SQL;
     }
 
     /**
-     * Parses a default value expression as given by PostgreSQL
+     * Parses a default value expression as given by PostgreSQL.
      */
     private function parseDefaultExpression(?string $default): ?string
     {

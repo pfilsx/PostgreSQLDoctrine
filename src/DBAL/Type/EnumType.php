@@ -16,8 +16,10 @@ class EnumType extends Type
 
     /**
      * @param array<string,mixed> $column
-     * @param AbstractPlatform $platform
+     * @param AbstractPlatform    $platform
+     *
      * @throws Exception\InvalidArgumentException
+     *
      * @return string
      */
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
@@ -42,7 +44,8 @@ class EnumType extends Type
 
     /**
      * @param int|string|\UnitEnum $value
-     * @param AbstractPlatform $platform
+     * @param AbstractPlatform     $platform
+     *
      * @return int|string
      */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): int|string

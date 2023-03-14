@@ -24,10 +24,11 @@ final class EnumTypeAsset extends AbstractAsset
     private array $usages;
 
     /**
-     * @param string $name
-     * @param string $className
-     * @param string[] $labels
+     * @param string               $name
+     * @param string               $className
+     * @param string[]             $labels
      * @param EnumTypeUsageAsset[] $usages
+     *
      * @throws InvalidArgumentException
      */
     public function __construct(string $name, string $className, array $labels = [], array $usages = [])
@@ -44,7 +45,9 @@ final class EnumTypeAsset extends AbstractAsset
 
     /**
      * @param class-string<EnumInterface|\UnitEnum> $className
+     *
      * @throws InvalidArgumentException
+     *
      * @return static
      */
     public static function fromEnumClassName(string $name, string $className): self
@@ -86,7 +89,9 @@ final class EnumTypeAsset extends AbstractAsset
 
     /**
      * @param AbstractPlatform $platform
+     *
      * @throws InvalidArgumentException
+     *
      * @return array<int|string>
      */
     public function getQuotedLabels(AbstractPlatform $platform): array

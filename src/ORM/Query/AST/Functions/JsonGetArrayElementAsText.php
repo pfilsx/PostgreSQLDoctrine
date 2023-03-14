@@ -8,8 +8,10 @@ use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 
 /**
- * Implementation of PostgreSql json array field retrieval by index
+ * Implementation of PostgreSql json array field retrieval by index.
+ *
  * @see https://www.postgresql.org/docs/current/functions-json.html
+ *
  * @example JSON_GET_ARRAY_ELEMENT_AS_TEXT(entity.field, 1)
  */
 final class JsonGetArrayElementAsText extends JsonGetFieldAsText

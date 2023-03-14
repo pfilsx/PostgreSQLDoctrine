@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\Tools;
 
-use BackedEnum;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
@@ -48,10 +47,12 @@ final class SchemaTool extends BaseTool
 
     /**
      * @param ClassMetadata[] $classes
+     *
      * @throws MappingException
      * @throws NotSupported
      * @throws SchemaException
      * @throws \Doctrine\DBAL\Exception
+     *
      * @return Schema
      */
     public function getSchemaFromMetadata(array $classes): Schema
@@ -95,7 +96,7 @@ final class SchemaTool extends BaseTool
             } elseif ($class->isInheritanceTypeJoined()) {
                 // Add all non-inherited fields as columns
                 foreach ($class->fieldMappings as $fieldName => $mapping) {
-                    if (! isset($mapping['inherited'])) {
+                    if (!isset($mapping['inherited'])) {
                         $this->gatherColumn($class, $mapping, $table);
                     }
                 }
@@ -193,7 +194,7 @@ final class SchemaTool extends BaseTool
                 }
             }
 
-            if (! $table->hasIndex('primary')) {
+            if (!$table->hasIndex('primary')) {
                 $table->setPrimaryKey($pkColumns);
             }
 
@@ -210,7 +211,7 @@ final class SchemaTool extends BaseTool
 
             if (isset($class->table['indexes'])) {
                 foreach ($class->table['indexes'] as $indexName => $indexData) {
-                    if (! isset($indexData['flags'])) {
+                    if (!isset($indexData['flags'])) {
                         $indexData['flags'] = [];
                     }
 
@@ -250,7 +251,7 @@ final class SchemaTool extends BaseTool
             if ($class->isIdGeneratorSequence() && $class->name === $class->rootEntityName) {
                 $seqDef = $class->sequenceGeneratorDefinition;
                 $quotedName = $this->quoteStrategy->getSequenceName($seqDef, $class, $this->platform);
-                if (! $schema->hasSequence($quotedName)) {
+                if (!$schema->hasSequence($quotedName)) {
                     $schema->createSequence(
                         $quotedName,
                         (int) $seqDef['allocationSize'],
@@ -275,8 +276,7 @@ final class SchemaTool extends BaseTool
             }
         }
 
-
-        if (! $this->platform->supportsSchemas() && ! $this->platform->canEmulateSchemas()) {
+        if (!$this->platform->supportsSchemas() && !$this->platform->canEmulateSchemas()) {
             $schema->visit(new RemoveNamespacedAssets());
         }
 
@@ -321,8 +321,8 @@ final class SchemaTool extends BaseTool
     /**
      * Creates a column definition as required by the DBAL from an ORM field mapping definition.
      *
-     * @param ClassMetadata $class The class that owns the field mapping.
-     * @param array<string, mixed> $mapping The field mapping.
+     * @param ClassMetadata        $class   the class that owns the field mapping
+     * @param array<string, mixed> $mapping the field mapping
      */
     private function gatherColumn(
         ClassMetadata $class,
@@ -334,7 +334,7 @@ final class SchemaTool extends BaseTool
 
         $options = [];
         $options['length'] = $mapping['length'] ?? null;
-        $options['notnull'] = isset($mapping['nullable']) ? ! $mapping['nullable'] : true;
+        $options['notnull'] = isset($mapping['nullable']) ? !$mapping['nullable'] : true;
         if ($class->isInheritanceTypeSingleTable() && $class->parentClasses) {
             $options['notnull'] = false;
         }
@@ -403,7 +403,7 @@ final class SchemaTool extends BaseTool
             $mappingOptions['enumType'] = $mapping['enumType'];
         }
 
-        if (($mappingOptions['default'] ?? null) instanceof BackedEnum) {
+        if (($mappingOptions['default'] ?? null) instanceof \BackedEnum) {
             $mappingOptions['default'] = $mappingOptions['default']->value;
         }
 
@@ -437,7 +437,7 @@ final class SchemaTool extends BaseTool
         array &$blacklistedFks
     ): void {
         foreach ($class->associationMappings as $id => $mapping) {
-            if (isset($mapping['inherited']) && ! in_array($id, $class->identifier, true)) {
+            if (isset($mapping['inherited']) && !in_array($id, $class->identifier, true)) {
                 continue;
             }
 
@@ -456,7 +456,7 @@ final class SchemaTool extends BaseTool
                     $blacklistedFks
                 );
             } elseif ($mapping['type'] === ClassMetadata::ONE_TO_MANY && $mapping['isOwningSide']) {
-                //... create join table, one-many through join table supported later
+                // ... create join table, one-many through join table supported later
                 throw NotSupported::create();
             } elseif ($mapping['type'] === ClassMetadata::MANY_TO_MANY && $mapping['isOwningSide']) {
                 // create join table
@@ -536,12 +536,8 @@ final class SchemaTool extends BaseTool
                 $joinColumn['referencedColumnName']
             );
 
-            if (! $definingClass) {
-                throw MissingColumnException::fromColumnSourceAndTarget(
-                    $joinColumn['referencedColumnName'],
-                    $mapping['sourceEntity'],
-                    $mapping['targetEntity']
-                );
+            if (!$definingClass) {
+                throw MissingColumnException::fromColumnSourceAndTarget($joinColumn['referencedColumnName'], $mapping['sourceEntity'], $mapping['targetEntity']);
             }
 
             $quotedColumnName = $this->quoteStrategy->getJoinColumnName($joinColumn, $class, $this->platform);
@@ -555,7 +551,7 @@ final class SchemaTool extends BaseTool
             $localColumns[] = $quotedColumnName;
             $foreignColumns[] = $quotedRefColumnName;
 
-            if (! $theJoinTable->hasColumn($quotedColumnName)) {
+            if (!$theJoinTable->hasColumn($quotedColumnName)) {
                 // Only add the column to the table if it does not exist already.
                 // It might exist already if the foreign key is mapped into a regular
                 // property as well.
@@ -571,7 +567,7 @@ final class SchemaTool extends BaseTool
                 }
 
                 if (isset($joinColumn['nullable'])) {
-                    $columnOptions['notnull'] = ! $joinColumn['nullable'];
+                    $columnOptions['notnull'] = !$joinColumn['nullable'];
                 }
 
                 $columnOptions += $this->gatherColumnOptions($fieldMapping);
@@ -624,7 +620,7 @@ final class SchemaTool extends BaseTool
             }
 
             $blacklistedFks[$compositeName] = true;
-        } elseif (! isset($blacklistedFks[$compositeName])) {
+        } elseif (!isset($blacklistedFks[$compositeName])) {
             $addedFks[$compositeName] = ['foreignTableName' => $foreignTableName, 'foreignColumns' => $foreignColumns];
             $theJoinTable->addForeignKeyConstraint(
                 $foreignTableName,
@@ -677,8 +673,8 @@ final class SchemaTool extends BaseTool
         $discrColumn = $class->discriminatorColumn;
 
         if (
-            ! isset($discrColumn['type']) ||
-            (strtolower($discrColumn['type']) === 'string' && ! isset($discrColumn['length']))
+            !isset($discrColumn['type']) ||
+            (strtolower($discrColumn['type']) === 'string' && !isset($discrColumn['length']))
         ) {
             $discrColumn['type'] = 'string';
             $discrColumn['length'] = 255;
@@ -697,7 +693,7 @@ final class SchemaTool extends BaseTool
     }
 
     /**
-     * Resolves fields in index mapping to column names
+     * Resolves fields in index mapping to column names.
      *
      * @param mixed[] $indexData index or unique constraint data
      *
@@ -710,14 +706,11 @@ final class SchemaTool extends BaseTool
         if (
             isset($indexData['columns'], $indexData['fields'])
             || (
-                ! isset($indexData['columns'])
-                && ! isset($indexData['fields'])
+                !isset($indexData['columns'])
+                && !isset($indexData['fields'])
             )
         ) {
-            throw MappingException::invalidIndexConfiguration(
-                $class,
-                $indexData['name'] ?? 'unnamed'
-            );
+            throw MappingException::invalidIndexConfiguration($class, $indexData['name'] ?? 'unnamed');
         }
 
         if (isset($indexData['columns'])) {

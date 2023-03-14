@@ -57,11 +57,7 @@ final class SchemaDiff extends BaseSchemaDiff
     public function toSql(AbstractPlatform $platform): array
     {
         if (!$platform instanceof PostgreSQLPlatform) {
-            throw new InvalidArgumentException(
-                'Option \'platform\' must be a subtype of \''
-                . PostgreSQLPlatform::class .
-                '\', instance of \'' . \get_class($platform) . '\' given'
-            );
+            throw new InvalidArgumentException('Option \'platform\' must be a subtype of \'' . PostgreSQLPlatform::class . '\', instance of \'' . \get_class($platform) . '\' given');
         }
         $sql = [];
 

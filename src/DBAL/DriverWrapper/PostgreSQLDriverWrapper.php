@@ -28,7 +28,6 @@ final class PostgreSQLDriverWrapper implements VersionAwarePlatformDriver
         }
     }
 
-
     public function connect(array $params): DriverConnection
     {
         return $this->innerDriver->connect($params);

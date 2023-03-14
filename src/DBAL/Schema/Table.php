@@ -24,8 +24,8 @@ final class Table extends BaseTable
      * @param mixed[] $options
      *
      * @throws SchemaException
-     * @return self
      *
+     * @return self
      */
     public function modifyColumn($name, array $options, ?string $enumClass = null): self
     {

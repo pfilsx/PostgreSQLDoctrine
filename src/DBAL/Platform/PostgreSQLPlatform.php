@@ -45,12 +45,14 @@ final class PostgreSQLPlatform extends BasePlatform
                        JSON_AGG(DISTINCT JSONB_BUILD_OBJECT(\'table\', types.usage_table, \'column\', types.usage_column, \'default\', types.usage_default)) FILTER (WHERE types.usage_table IS NOT NULL AND types.usage_column IS NOT NULL) AS usages
                 FROM types
                 GROUP BY types.name, types.comment'
-            ;
+        ;
     }
 
     /**
      * @param EnumTypeAsset $type
+     *
      * @throws Exception\InvalidArgumentException
+     *
      * @return string
      */
     public function getCreateTypeSql(EnumTypeAsset $type): string
@@ -66,7 +68,9 @@ final class PostgreSQLPlatform extends BasePlatform
     /**
      * @param EnumTypeAsset $from
      * @param EnumTypeAsset $to
+     *
      * @throws Exception
+     *
      * @return string[]
      */
     public function getAlterTypeSql(EnumTypeAsset $from, EnumTypeAsset $to): array
@@ -86,7 +90,7 @@ final class PostgreSQLPlatform extends BasePlatform
         if (count($removedLabels) < 1) {
             return $result;
         }
-        
+
         $self = $this;
 
         $result[] = "ALTER TYPE {$typeName} RENAME TO {$typeName}_old";
@@ -151,7 +155,6 @@ final class PostgreSQLPlatform extends BasePlatform
         }
 
         return is_subclass_of($type1, $type2::class) || is_subclass_of($type2, $type1::class);
-
     }
 
     protected function initializeDoctrineTypeMappings(): void
@@ -160,5 +163,4 @@ final class PostgreSQLPlatform extends BasePlatform
 
         $this->doctrineTypeMapping[EnumType::NAME] = EnumType::NAME;
     }
-
 }
