@@ -53,6 +53,7 @@ Documentation
 -------------
 
 * [ENUMS](docs/ENUMS.md)
+* [Functions](docs/FUNCTIONS-AND-OPERATORS.md)
 
 License
 -------
