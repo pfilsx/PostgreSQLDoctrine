@@ -8,17 +8,19 @@ PostgreSQL Doctrine
 Description
 ------------
 
-Provides extended Doctrine DBAL and Doctrine migration classes to allow you to use PostgreSQL 
-specific features such as [enums](https://www.postgresql.org/docs/current/datatype-enum.html) or JSON(B) with Doctrine.
+Provides extended Doctrine and Doctrine migrations PostgreSQL support with 
+specific features such as [enums](https://www.postgresql.org/docs/current/datatype-enum.html), arrays and aggregate and JSON(B) functions.
 
 Features
 --------
-* PostgreSQL enums support in DBAL and migrations
+* PostgreSQL enums support in DBAL, ORM and migrations
 * PHP8 enum support
 * Fix creating [default schema in down migrations for pgsql](https://github.com/doctrine/dbal/issues/1110)
 * [JSON(B) functions](https://www.postgresql.org/docs/current/functions-json.html) (in progress)
 * JSON(B) types based on object models (in progress, requires symfony/serializer)
 * [Trait](src/ORM/Trait/ExistsMethodRepositoryTrait.php) for easy use of [SELECT EXISTS(...)](https://www.postgresql.org/docs/current/functions-subquery.html#FUNCTIONS-SUBQUERY-EXISTS) in your entity repositories
+* Aggregate functions with filter condition support
+* Array types
 
 Requirement
 -----------
@@ -26,7 +28,7 @@ Requirement
 * doctrine/dbal ^3.5.1
 * doctrine/migrations ^3.5.2
 * symfony/serializer >=5.4.* (optional for json models)
-* symfony/property-info >=5.4.* (optional)
+* symfony/property-info >=5.4.* (optional for json models)
 
 Installation
 ------------
@@ -46,14 +48,16 @@ for instructions on how to override the default doctrine classes in your project
 Required steps:
 1. Register [PostgreSQLDriverMiddleware.php](src/DBAL/Middleware/PostgreSQLDriverMiddleware.php) as driver middleware
 2. Register [OrmSchemaProvider.php](src/Migrations/Provider/OrmSchemaProvider.php) as Doctrine\Migrations\Provider\SchemaProvider in Doctrine\Migrations\DependencyFactory
+3. Register types and functions on your needs
 
 For Symfony integration see [PostgreSQLDoctrineBundle](https://github.com/pfilsx/PostgreSQLDoctrineBundle)
 
 Documentation
 -------------
 
-* [ENUMS](docs/ENUMS.md)
-* [Functions](docs/FUNCTIONS-AND-OPERATORS.md)
+* [Enums](docs/Enums.md)
+* [Functions](docs/Functions-and-Operators.md)
+* [Types](docs/Types.md)
 
 License
 -------
