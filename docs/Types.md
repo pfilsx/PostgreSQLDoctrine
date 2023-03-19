@@ -8,6 +8,7 @@ Available types
 | _int4           | integer[]   | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType](../src/DBAL/Type/IntegerArrayType.php)   | 
 | _int8           | bigint[]    | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType](../src/DBAL/Type/BigIntArrayType.php)     | 
 | _text           | text[]      | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType](../src/DBAL/Type/TextArrayType.php)         |
+| tsvector        | tsvector    | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\TsVectorType](../src/DBAL/Type/TsVectorType.php)           |
 
 Integration with Doctrine
 =========================
@@ -22,18 +23,20 @@ Type::addType('smallint[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\SmallIntArrayTy
 Type::addType('integer[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType');
 Type::addType('bigint[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType');
 Type::addType('text[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType');
+Type::addType('tsvector', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\TsVectorType');
 
 // ...
 
 $platform = $em->getConnection()->getDatabasePlatform();
-$platform->registerDoctrineTypeMapping('bool[]','bool[]');
-$platform->registerDoctrineTypeMapping('_bool','bool[]');
-$platform->registerDoctrineTypeMapping('integer[]','integer[]');
-$platform->registerDoctrineTypeMapping('_int4','integer[]');
-$platform->registerDoctrineTypeMapping('bigint[]','bigint[]');
-$platform->registerDoctrineTypeMapping('_int8','bigint[]');
-$platform->registerDoctrineTypeMapping('text[]','text[]');
-$platform->registerDoctrineTypeMapping('_text','text[]');
+$platform->registerDoctrineTypeMapping('bool[]', 'bool[]');
+$platform->registerDoctrineTypeMapping('_bool', 'bool[]');
+$platform->registerDoctrineTypeMapping('integer[]', 'integer[]');
+$platform->registerDoctrineTypeMapping('_int4', 'integer[]');
+$platform->registerDoctrineTypeMapping('bigint[]', 'bigint[]');
+$platform->registerDoctrineTypeMapping('_int8', 'bigint[]');
+$platform->registerDoctrineTypeMapping('text[]', 'text[]');
+$platform->registerDoctrineTypeMapping('_text', 'text[]');
+$platform->registerDoctrineTypeMapping('tsvector', 'tsvector');
 ```
 
 Integration with Symfony
@@ -49,6 +52,7 @@ doctrine:
             integer[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType
             bigint[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType
             text[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType
+            tsvector: Pfilsx\PostgreSQLDoctrine\DBAL\Type\TsVectorType
             
         mapping_types:
             bool[]: bool[]
@@ -61,6 +65,7 @@ doctrine:
             _int8: bigint[]
             text[]: text[]
             _text: text[]
+            tsvector: tsvector
         # or only for specific connection
         connections:
             connection_name:
@@ -75,4 +80,5 @@ doctrine:
                     _int8: bigint[]
                     text[]: text[]
                     _text: text[]
+                    tsvector: tsvector
 ```

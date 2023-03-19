@@ -12,7 +12,7 @@ use Doctrine\DBAL\Types\Type;
  *
  * @see https://www.postgresql.org/docs/current/datatype-textsearch.html#DATATYPE-TSVECTOR
  */
-class TSVectorType extends Type
+class TsVectorType extends Type
 {
     /**
      * @param array<string, mixed> $column
