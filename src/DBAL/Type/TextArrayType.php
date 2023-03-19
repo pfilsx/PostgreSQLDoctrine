@@ -11,7 +11,7 @@ use Pfilsx\PostgreSQLDoctrine\Enum\ArrayTypeEnum;
  *
  * @see https://www.postgresql.org/docs/current/arrays.html
  */
-class TextArray extends AbstractArrayType
+class TextArrayType extends AbstractArrayType
 {
     protected static function getArrayType(): ArrayTypeEnum
     {

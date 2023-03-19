@@ -1,13 +1,13 @@
 Available types
 ===============
 
-| PostgreSQL type | Register as | Implementation                                                                          |
-|-----------------|-------------|-----------------------------------------------------------------------------------------|
-| _bool           | bool[]      | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\BooleanArray](../src/DBAL/Type/BooleanArray.php)   |
-| _int2           | smallint[]  | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\SmallIntArray](../src/DBAL/Type/SmallIntArray.php) | 
-| _int4           | integer[]   | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArray](../src/DBAL/Type/IntegerArray.php)   | 
-| _int8           | bigint[]    | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArray](../src/DBAL/Type/BigIntArray.php)     | 
-| _text           | text[]      | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArray](../src/DBAL/Type/TextArray.php)         |
+| PostgreSQL type | Register as | Implementation                                                                                  |
+|-----------------|-------------|-------------------------------------------------------------------------------------------------|
+| _bool           | bool[]      | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\BooleanArrayType](../src/DBAL/Type/BooleanArrayType.php)   |
+| _int2           | smallint[]  | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\SmallIntArrayType](../src/DBAL/Type/SmallIntArrayType.php) | 
+| _int4           | integer[]   | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType](../src/DBAL/Type/IntegerArrayType.php)   | 
+| _int8           | bigint[]    | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType](../src/DBAL/Type/BigIntArrayType.php)     | 
+| _text           | text[]      | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType](../src/DBAL/Type/TextArrayType.php)         |
 
 Integration with Doctrine
 =========================
@@ -17,11 +17,11 @@ Integration with Doctrine
 
 use Doctrine\DBAL\Types\Type;
 
-Type::addType('bool[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\BooleanArray');
-Type::addType('smallint[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\SmallIntArray');
-Type::addType('integer[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArray');
-Type::addType('bigint[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArray');
-Type::addType('text[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArray');
+Type::addType('bool[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\BooleanArrayType');
+Type::addType('smallint[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\SmallIntArrayType');
+Type::addType('integer[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType');
+Type::addType('bigint[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType');
+Type::addType('text[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType');
 
 // ...
 
@@ -38,16 +38,17 @@ $platform->registerDoctrineTypeMapping('_text','text[]');
 
 Integration with Symfony
 =========================
+
 ```yaml
 # config/packages/doctrine.yaml
 doctrine:
     dbal:
         types: 
-            bool[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\BooleanArray
-            smallint[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\SmallIntArray
-            integer[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArray
-            bigint[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArray
-            text[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArray
+            bool[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\BooleanArrayType
+            smallint[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\SmallIntArrayType
+            integer[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType
+            bigint[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType
+            text[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType
             
         mapping_types:
             bool[]: bool[]
@@ -60,7 +61,7 @@ doctrine:
             _int8: bigint[]
             text[]: text[]
             _text: text[]
-        # or
+        # or only for specific connection
         connections:
             connection_name:
                 mapping_types:
