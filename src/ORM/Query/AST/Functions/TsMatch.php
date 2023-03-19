@@ -11,30 +11,30 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql JSONB key exists operator.
+ * Implementation of PostgreSql text search matching operator ( @@ ).
  *
- * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE
+ * @see https://www.postgresql.org/docs/current/textsearch-intro.html#TEXTSEARCH-MATCHING
  *
- * @example JSONB_KEY_EXISTS(entity.field, 'a')
+ * @example TS_MATCH(entity.field, TO_TSQUERY('query text'))
  */
-final class JsonbKeyExists extends FunctionNode
+class TsMatch extends FunctionNode
 {
-    protected Node $field;
+    private Node $vector;
 
-    protected Node $key;
+    private Node $query;
 
     public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
-        $this->field = $parser->StringPrimary();
+        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $this->vector = $parser->StringPrimary();
         $parser->match(Lexer::T_COMMA);
-        $this->key = $parser->StringPrimary();
+        $this->query = $parser->StringPrimary();
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return "{$this->field->dispatch($sqlWalker)} ? {$this->key->dispatch($sqlWalker)}";
+        return "({$this->vector->dispatch($sqlWalker)} @@ {$this->query->dispatch($sqlWalker)})";
     }
 }

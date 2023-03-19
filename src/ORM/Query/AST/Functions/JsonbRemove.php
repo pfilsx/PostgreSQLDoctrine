@@ -11,7 +11,7 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql jsonb remove by key function.
+ * Implementation of PostgreSql JSONB remove by key operator.
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE
  *

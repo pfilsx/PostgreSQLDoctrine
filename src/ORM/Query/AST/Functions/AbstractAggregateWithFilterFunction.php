@@ -10,7 +10,7 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 use Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\FilterExpression;
 
-abstract class AggregateWithFilterFunction extends FunctionNode
+abstract class AbstractAggregateWithFilterFunction extends FunctionNode
 {
     private const FILTER_IDENTIFIER = 'FILTER';
     private ?FilterExpression $filterExpression = null;

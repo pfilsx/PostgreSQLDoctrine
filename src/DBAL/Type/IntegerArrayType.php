@@ -7,19 +7,19 @@ namespace Pfilsx\PostgreSQLDoctrine\DBAL\Type;
 use Pfilsx\PostgreSQLDoctrine\Enum\ArrayTypeEnum;
 
 /**
- * Implementation of PostgreSql SMALLINT[] data type.
+ * Implementation of PostgreSql INTEGER[] data type.
  *
  * @see https://www.postgresql.org/docs/current/arrays.html
  */
-class SmallIntArray extends AbstractArrayType
+class IntegerArrayType extends AbstractArrayType
 {
     protected static function getArrayType(): ArrayTypeEnum
     {
-        return ArrayTypeEnum::SmallIntArray;
+        return ArrayTypeEnum::IntArray;
     }
 
     public function getName(): string
     {
-        return 'smallint[]';
+        return 'integer[]';
     }
 }

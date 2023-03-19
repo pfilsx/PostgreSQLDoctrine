@@ -11,7 +11,7 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql json object retrieval by path.
+ * Implementation of PostgreSql JSON(B) object retrieval by path.
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html
  *

@@ -21,6 +21,7 @@ Features
 * [Trait](src/ORM/Trait/ExistsMethodRepositoryTrait.php) for easy use of [SELECT EXISTS(...)](https://www.postgresql.org/docs/current/functions-subquery.html#FUNCTIONS-SUBQUERY-EXISTS) in your entity repositories
 * Aggregate functions with filter condition support
 * Array types
+* [Text Search](https://www.postgresql.org/docs/current/textsearch.html) support
 
 Requirement
 -----------

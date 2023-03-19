@@ -10,14 +10,14 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql JSONB_AGG().
+ * Implementation of PostgreSql JSONB_AGG() function.
  *
  * @see https://www.postgresql.org/docs/current/functions-aggregate.html#FUNCTIONS-AGGREGATE-TABLE
  *
  * @example JSONB_AGG(entity.field)
  * @example JSONB_AGG(entity.field) FILTER (WHERE entity.field IS NOT NULL)
  */
-final class JsonbAgg extends AggregateWithFilterFunction
+final class JsonbAgg extends AbstractAggregateWithFilterFunction
 {
     private bool $distinct = false;
 

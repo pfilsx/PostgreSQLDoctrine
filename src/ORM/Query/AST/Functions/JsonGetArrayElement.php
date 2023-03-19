@@ -8,7 +8,7 @@ use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 
 /**
- * Implementation of PostgreSql json array field retrieval by index.
+ * Implementation of PostgreSql JSON(B) array field retrieval by index.
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html
  *
