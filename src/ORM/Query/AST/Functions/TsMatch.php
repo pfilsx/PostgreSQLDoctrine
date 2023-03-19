@@ -26,7 +26,7 @@ class TsMatch extends FunctionNode
     public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $parser->match(Lexer::T_OPEN_PARENTHESIS);
         $this->vector = $parser->StringPrimary();
         $parser->match(Lexer::T_COMMA);
         $this->query = $parser->StringPrimary();
