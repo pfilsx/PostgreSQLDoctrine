@@ -7,7 +7,7 @@ namespace Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql json object as text retrieval by path.
+ * Implementation of PostgreSql JSON(B) object as text retrieval by path.
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html
  *

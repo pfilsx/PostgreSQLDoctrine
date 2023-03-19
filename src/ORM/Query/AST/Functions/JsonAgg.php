@@ -10,7 +10,7 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql JSON_AGG().
+ * Implementation of PostgreSql JSON_AGG() function.
  *
  * @see https://www.postgresql.org/docs/current/functions-aggregate.html#FUNCTIONS-AGGREGATE-TABLE
  *
@@ -19,7 +19,7 @@ use Doctrine\ORM\Query\SqlWalker;
  * @example JSON_AGG(entity.field) FILTER (WHERE entity.field IS NOT NULL)
  * @example JSON_AGG(DISTINCT entity.field) FILTER (WHERE entity.field IS NOT NULL)
  */
-final class JsonAgg extends AggregateWithFilterFunction
+final class JsonAgg extends AbstractAggregateWithFilterFunction
 {
     private bool $distinct = false;
 
