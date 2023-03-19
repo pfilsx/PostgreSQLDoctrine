@@ -10,14 +10,14 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql STRING_AGG().
+ * Implementation of PostgreSql STRING_AGG() function.
  *
  * @see https://www.postgresql.org/docs/current/functions-aggregate.html#FUNCTIONS-AGGREGATE-TABLE
  *
  * @example STRING_AGG(entity.field, ', ')
  * @example STRING_AGG(entity.field, ', ') FILTER (WHERE entity.field IS NOT NULL)
  */
-final class StringAgg extends AggregateWithFilterFunction
+final class StringAgg extends AbstractAggregateWithFilterFunction
 {
     private bool $distinct = false;
     private Node $expr;

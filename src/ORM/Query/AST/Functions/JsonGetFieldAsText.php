@@ -8,7 +8,7 @@ use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql json object field as text retrieval by path.
+ * Implementation of PostgreSql JSON(B) object field as text retrieval by path.
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html
  *

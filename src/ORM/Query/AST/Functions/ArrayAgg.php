@@ -10,7 +10,7 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql ARRAY_AGG().
+ * Implementation of PostgreSql ARRAY_AGG() function.
  *
  * @see https://www.postgresql.org/docs/current/functions-aggregate.html#FUNCTIONS-AGGREGATE-TABLE
  *
@@ -19,7 +19,7 @@ use Doctrine\ORM\Query\SqlWalker;
  * @example ARRAY_AGG(entity.field) FILTER (WHERE entity.field IS NOT NULL)
  * @example ARRAY_AGG(DISTINCT entity.field) FILTER (WHERE entity.field IS NOT NULL)
  */
-final class ArrayAgg extends AggregateWithFilterFunction
+final class ArrayAgg extends AbstractAggregateWithFilterFunction
 {
     private bool $distinct = false;
 
