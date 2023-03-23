@@ -11,30 +11,32 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql JSONB concatenation operator.
+ * Implementation of PostgreSql overlaps operator (&&).
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE
+ * @see https://www.postgresql.org/docs/current/functions-array.html
  *
- * @example JSONB_CONCAT(entity.field, entity2.field)
+ * @example OVERLAPS(entity.field, entity2.field)
+ * @example OVERLAPS(entity.field, ARRAY(1, 2, 3))
  */
-final class JsonbConcat extends FunctionNode
+class Overlaps extends FunctionNode
 {
-    protected Node $json1;
+    private Node $field;
 
-    protected Node $json2;
+    private Node $value;
 
     public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
-        $this->json1 = $parser->StringPrimary();
+        $this->field = $parser->StringPrimary();
         $parser->match(Lexer::T_COMMA);
-        $this->json2 = $parser->StringPrimary();
+        $this->value = $parser->StringPrimary();
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return "({$this->json1->dispatch($sqlWalker)} || {$this->json2->dispatch($sqlWalker)})";
+        return "({$this->field->dispatch($sqlWalker)} && {$this->value->dispatch($sqlWalker)})";
     }
 }
