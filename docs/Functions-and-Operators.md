@@ -23,8 +23,13 @@
 | PLAINTO_TSQUERY()       | PLAINTO_TSQUERY       | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\PlainToTsQuery](../src/ORM/Query/AST/Functions/PlainToTsQuery.php)         |
 | STRING_AGG()            | STRING_AGG            | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\StringAgg](../src/ORM/Query/AST/Functions/StringAgg.php)                   |
 | ARRAY[]                 | ARRAY                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToArray](../src/ORM/Query/AST/Functions/ToArray.php)                       |
+| BIGINT[]                | BIGINT_ARRAY          | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToBigIntArray](../src/ORM/Query/AST/Functions/ToBigIntArray.php)           |
+| BOOLEAN[]               | BOOLEAN_ARRAY         | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToBooleanArray](../src/ORM/Query/AST/Functions/ToBooleanArray.php)         |
+| INT[]                   | INT_ARRAY             | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToIntArray](../src/ORM/Query/AST/Functions/ToIntArray.php)                 |
 | TO_JSON()               | TO_JSON               | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToJson](../src/ORM/Query/AST/Functions/ToJson.php)                         |
 | TO_JSONB()              | TO_JSONB              | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToJsonb](../src/ORM/Query/AST/Functions/ToJsonb.php)                       |
+| SMALLINT[]              | SMALLINT_ARRAY        | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToSmallIntArray](../src/ORM/Query/AST/Functions/ToSmallIntArray.php)       |
+| TEXT[]                  | TEXT_ARRAY            | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToTextArray](../src/ORM/Query/AST/Functions/ToTextArray.php)               |
 | TO_TSQUERY()            | TO_TSQUERY            | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToTsQuery](../src/ORM/Query/AST/Functions/ToTsQuery.php)                   |
 | TO_TSVECTOR()           | TO_TSVECTOR           | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToTsVector](../src/ORM/Query/AST/Functions/ToTsVector.php)                 |
 | TS_HEADLINE()           | TS_HEADLINE           | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\TsHeadline](../src/ORM/Query/AST/Functions/TsHeadline.php)                 |
