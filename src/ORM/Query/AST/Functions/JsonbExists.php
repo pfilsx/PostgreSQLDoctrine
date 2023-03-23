@@ -11,30 +11,30 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql JSONB concatenation operator.
+ * Implementation of PostgreSql JSONB key exists operator.
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE
  *
- * @example JSONB_CONCAT(entity.field, entity2.field)
+ * @example JSONB_EXISTS(entity.field, 'a')
  */
-final class JsonbConcat extends FunctionNode
+final class JsonbExists extends FunctionNode
 {
-    protected Node $json1;
+    protected Node $field;
 
-    protected Node $json2;
+    protected Node $key;
 
     public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
-        $this->json1 = $parser->StringPrimary();
+        $this->field = $parser->StringPrimary();
         $parser->match(Lexer::T_COMMA);
-        $this->json2 = $parser->StringPrimary();
+        $this->key = $parser->StringPrimary();
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return "({$this->json1->dispatch($sqlWalker)} || {$this->json2->dispatch($sqlWalker)})";
+        return "JSONB_EXISTS({$this->field->dispatch($sqlWalker)}, {$this->key->dispatch($sqlWalker)})";
     }
 }

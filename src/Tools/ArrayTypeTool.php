@@ -219,7 +219,7 @@ final class ArrayTypeTool
         }
 
         foreach ($array as &$item) {
-            $lowerItem = strtolower($item);
+            $lowerItem = strtolower(trim($item, '"\''));
             $item = (self::BOOL_LITERALS[$lowerItem] ?? $lowerItem) !== 'false' && (bool) $lowerItem;
         }
 

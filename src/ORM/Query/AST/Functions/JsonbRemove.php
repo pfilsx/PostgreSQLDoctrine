@@ -35,6 +35,6 @@ final class JsonbRemove extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return "{$this->jsonb->dispatch($sqlWalker)} - {$this->key->dispatch($sqlWalker)}";
+        return "({$this->jsonb->dispatch($sqlWalker)} - {$this->key->dispatch($sqlWalker)})";
     }
 }

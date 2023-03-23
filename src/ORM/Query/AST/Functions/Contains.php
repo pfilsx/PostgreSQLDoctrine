@@ -13,15 +13,17 @@ use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
 /**
- * Implementation of PostgreSql JSONB contains operator.
+ * Implementation of PostgreSql contains operator (||).
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE
+ * @see https://www.postgresql.org/docs/current/functions-array.html
  *
- * @example JSONB_CONTAINS(entity.field, '{"a": 1}')
- *
- * @deprecated use Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Contains instead
+ * @example CONTAINS(entity.field, entity2.field)
+ * @example CONTAINS(entity.field, TO_JSON('{"a": 1}'))
+ * @example CONTAINS(entity.field, TO_JSONB('{"a": 1}'))
+ * @example CONTAINS(entity.field, ARRAY(1, 2, 3))
  */
-final class JsonbContains extends FunctionNode
+final class Contains extends FunctionNode
 {
     protected Node $field;
 
