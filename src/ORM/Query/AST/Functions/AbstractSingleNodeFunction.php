@@ -10,31 +10,24 @@ use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 
-/**
- * Implementation of PostgreSql JSONB key exists operator.
- *
- * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSONB-OP-TABLE
- *
- * @example JSONB_KEY_EXISTS(entity.field, 'a')
- */
-final class JsonbKeyExists extends FunctionNode
+abstract class AbstractSingleNodeFunction extends FunctionNode
 {
     protected Node $field;
 
-    protected Node $key;
+    abstract protected function getFunctionName(): string;
+
+    abstract protected function parseField(Parser $parser): Node;
 
     public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
-        $this->field = $parser->StringPrimary();
-        $parser->match(Lexer::T_COMMA);
-        $this->key = $parser->StringPrimary();
+        $this->field = $this->parseField($parser);
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
     }
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return "{$this->field->dispatch($sqlWalker)} ? {$this->key->dispatch($sqlWalker)}";
+        return "{$this->getFunctionName()}({$this->field->dispatch($sqlWalker)})";
     }
 }
