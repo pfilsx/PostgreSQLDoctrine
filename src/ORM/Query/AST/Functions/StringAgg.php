@@ -44,7 +44,7 @@ final class StringAgg extends AbstractAggregateWithFilterFunction
     public function getFunctionSql(SqlWalker $sqlWalker): string
     {
         return sprintf('STRING_AGG(%s%s, %s)',
-            $this->distinct ? 'DISTINCT' : '',
+            $this->distinct ? 'DISTINCT ' : '',
             $this->expr->dispatch($sqlWalker),
             $this->delimiter->dispatch($sqlWalker)
         );
