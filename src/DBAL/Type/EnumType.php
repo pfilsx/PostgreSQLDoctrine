@@ -43,12 +43,12 @@ class EnumType extends Type
     }
 
     /**
-     * @param int|string|\UnitEnum $value
+     * @param null|int|string|\UnitEnum $value
      * @param AbstractPlatform     $platform
      *
-     * @return int|string
+     * @return null|int|string
      */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): int|string
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): null|int|string
     {
         if ($value instanceof \BackedEnum) {
             return $value->value;
