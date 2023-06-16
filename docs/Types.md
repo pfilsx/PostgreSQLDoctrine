@@ -8,6 +8,7 @@ Available types
 | _int4           | integer[]   | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType](../src/DBAL/Type/IntegerArrayType.php)   | 
 | _int8           | bigint[]    | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType](../src/DBAL/Type/BigIntArrayType.php)     | 
 | _text           | text[]      | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType](../src/DBAL/Type/TextArrayType.php)         |
+| _json           | json[]      | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\JsonArrayType](../src/DBAL/Type/JsonArrayType.php)         |
 | tsvector        | tsvector    | [Pfilsx\PostgreSQLDoctrine\DBAL\Type\TsVectorType](../src/DBAL/Type/TsVectorType.php)           |
 
 Integration with Doctrine
@@ -23,6 +24,7 @@ Type::addType('smallint[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\SmallIntArrayTy
 Type::addType('integer[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType');
 Type::addType('bigint[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType');
 Type::addType('text[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType');
+Type::addType('json[]', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\JsonArrayType');
 Type::addType('tsvector', 'Pfilsx\PostgreSQLDoctrine\DBAL\Type\TsVectorType');
 
 // ...
@@ -36,6 +38,8 @@ $platform->registerDoctrineTypeMapping('bigint[]', 'bigint[]');
 $platform->registerDoctrineTypeMapping('_int8', 'bigint[]');
 $platform->registerDoctrineTypeMapping('text[]', 'text[]');
 $platform->registerDoctrineTypeMapping('_text', 'text[]');
+$platform->registerDoctrineTypeMapping('json[]', 'json[]');
+$platform->registerDoctrineTypeMapping('_json', 'json[]');
 $platform->registerDoctrineTypeMapping('tsvector', 'tsvector');
 ```
 
@@ -52,6 +56,7 @@ doctrine:
             integer[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\IntegerArrayType
             bigint[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType
             text[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\TextArrayType
+            json[]: Pfilsx\PostgreSQLDoctrine\DBAL\Type\JsonArrayType
             tsvector: Pfilsx\PostgreSQLDoctrine\DBAL\Type\TsVectorType
             
         mapping_types:
@@ -65,6 +70,8 @@ doctrine:
             _int8: bigint[]
             text[]: text[]
             _text: text[]
+            json[]: json[]
+            _json: json[]
             tsvector: tsvector
         # or only for specific connection
         connections:
@@ -80,5 +87,7 @@ doctrine:
                     _int8: bigint[]
                     text[]: text[]
                     _text: text[]
+                    json[]: json[]
+                    _json: json[]
                     tsvector: tsvector
 ```

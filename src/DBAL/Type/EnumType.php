@@ -44,7 +44,7 @@ class EnumType extends Type
 
     /**
      * @param null|int|string|\UnitEnum $value
-     * @param AbstractPlatform     $platform
+     * @param AbstractPlatform          $platform
      *
      * @return null|int|string
      */
