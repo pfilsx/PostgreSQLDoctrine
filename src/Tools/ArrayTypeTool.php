@@ -54,7 +54,8 @@ final class ArrayTypeTool
         $preparedArray = match ($type) {
             ArrayTypeEnum::SmallIntArray, ArrayTypeEnum::IntArray, ArrayTypeEnum::BigIntArray => self::convertIntPHPArrayToDatabaseArray($array, $type),
             ArrayTypeEnum::TextArray => self::convertStringPHPArrayToDatabaseArray($array),
-            ArrayTypeEnum::BooleanArray => self::convertBooleanPHPArrayToDatabaseArray($array, $platform)
+            ArrayTypeEnum::BooleanArray => self::convertBooleanPHPArrayToDatabaseArray($array, $platform),
+            ArrayTypeEnum::JsonArray => array_map(static fn ($row) => '"' . json_encode($row) . '"', $array),
         };
 
         return '{' . implode(',', $preparedArray) . '}';
@@ -64,6 +65,8 @@ final class ArrayTypeTool
      * @param string                $value
      * @param ArrayTypeEnum         $type
      * @param null|AbstractPlatform $platform
+     *
+     * @throws \JsonException
      *
      * @return bool[]|int[]|string[]
      */
@@ -77,6 +80,7 @@ final class ArrayTypeTool
             ArrayTypeEnum::SmallIntArray, ArrayTypeEnum::IntArray, ArrayTypeEnum::BigIntArray => self::convertDatabaseArrayStringToIntPHPArray($value, $type),
             ArrayTypeEnum::TextArray => self::convertDatabaseArrayStringToStringPHPArray($value),
             ArrayTypeEnum::BooleanArray => self::convertDatabaseArrayStringToBoolPHPArray($value, $platform),
+            ArrayTypeEnum::JsonArray => self::convertDatabaseArrayJsonStringToPHPArray($value),
         };
     }
 
@@ -224,5 +228,15 @@ final class ArrayTypeTool
         }
 
         return $array;
+    }
+
+    private static function convertDatabaseArrayJsonStringToPHPArray(string $value): array
+    {
+        return json_decode(
+            '[' . stripcslashes(preg_replace('/\"(\{.+\})\"/U', '$1', trim($value, '{}'))) . ']',
+            true,
+            512,
+            JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING
+        );
     }
 }

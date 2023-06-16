@@ -11,4 +11,5 @@ enum ArrayTypeEnum: string
     case BigIntArray = 'bigint';
     case TextArray = 'text';
     case BooleanArray = 'boolean';
+    case JsonArray = 'json';
 }
