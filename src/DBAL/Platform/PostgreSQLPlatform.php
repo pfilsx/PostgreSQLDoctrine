@@ -14,7 +14,7 @@ use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\PostgreSQLSchemaManager;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\EnumType;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\JsonModelType;
 
-final class PostgreSQLPlatform extends BasePlatform
+class PostgreSQLPlatform extends BasePlatform
 {
     public function createSchemaManager(Connection $connection): PostgreSQLSchemaManager
     {

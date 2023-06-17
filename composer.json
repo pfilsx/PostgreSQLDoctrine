@@ -39,6 +39,7 @@
         "doctrine/orm": "^2.13",
         "symfony/serializer": ">=5.4",
         "symfony/property-info": ">=5.4",
-        "phpunit/phpunit": "^10.0"
+        "phpunit/phpunit": "^10.0",
+        "symfony/property-access": ">=5.4"
     }
 }

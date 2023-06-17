@@ -45,7 +45,7 @@ final class ArrayTypeTool
      *
      * @return string
      */
-    public static function convertPHPArrayToDatabaseArrayString(array $array, ArrayTypeEnum $type, ?AbstractPlatform $platform = null): string
+    public static function convertPHPArrayToDatabaseArrayString(array $array, ArrayTypeEnum $type, AbstractPlatform $platform = null): string
     {
         if ($array === []) {
             return '{}';
@@ -55,7 +55,7 @@ final class ArrayTypeTool
             ArrayTypeEnum::SmallIntArray, ArrayTypeEnum::IntArray, ArrayTypeEnum::BigIntArray => self::convertIntPHPArrayToDatabaseArray($array, $type),
             ArrayTypeEnum::TextArray => self::convertStringPHPArrayToDatabaseArray($array),
             ArrayTypeEnum::BooleanArray => self::convertBooleanPHPArrayToDatabaseArray($array, $platform),
-            ArrayTypeEnum::JsonArray => array_map(static fn ($row) => '"' . json_encode($row) . '"', $array),
+            ArrayTypeEnum::JsonArray => array_map(static fn ($row) => '"' . addcslashes(json_encode($row), '"') . '"', $array),
         };
 
         return '{' . implode(',', $preparedArray) . '}';
@@ -70,7 +70,7 @@ final class ArrayTypeTool
      *
      * @return bool[]|int[]|string[]
      */
-    public static function convertDatabaseArrayStringToPHPArray(string $value, ArrayTypeEnum $type, ?AbstractPlatform $platform = null): array
+    public static function convertDatabaseArrayStringToPHPArray(string $value, ArrayTypeEnum $type, AbstractPlatform $platform = null): array
     {
         if ($value === '{}') {
             return [];
@@ -153,7 +153,7 @@ final class ArrayTypeTool
                 continue;
             }
 
-            throw new \InvalidArgumentException(\sprintf('Item at key %s has invalid type. Expected boolean, 0, 1 or boolean string literal, "%s" provided.', $key, \var_export($value, true)));
+            throw new \InvalidArgumentException(\sprintf('Item at key %s has invalid type. Expected boolean, 0, 1 or boolean string literal, %s provided.', $key, \var_export($value, true)));
         }
 
         return $array;
@@ -193,10 +193,10 @@ final class ArrayTypeTool
         $array = \str_getcsv(\trim($value, '{}'));
 
         foreach ($array as $key => $item) {
-            if ($item === null) {
-                unset($array[$key]);
+            if ($item === 'null') {
+                $array[$key] = null;
 
-                break;
+                continue;
             }
 
             $array[$key] = \stripslashes($item);

@@ -18,7 +18,7 @@ final class Schema extends BaseSchema
     public function __construct(
         array $tables = [],
         array $sequences = [],
-        ?SchemaConfig $schemaConfig = null,
+        SchemaConfig $schemaConfig = null,
         array $namespaces = [],
         array $types = []
     ) {

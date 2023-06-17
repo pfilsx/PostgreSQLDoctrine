@@ -294,11 +294,11 @@ final class SchemaTool extends BaseTool
         ClassMetadata $class,
         array $processedClasses
     ): bool {
-        return isset($processedClasses[$class->name]) ||
-            $class->isMappedSuperclass ||
-            $class->isEmbeddedClass ||
-            ($class->isInheritanceTypeSingleTable() && $class->name !== $class->rootEntityName) ||
-            in_array($class->name, $this->em->getConfiguration()->getSchemaIgnoreClasses());
+        return isset($processedClasses[$class->name])
+            || $class->isMappedSuperclass
+            || $class->isEmbeddedClass
+            || ($class->isInheritanceTypeSingleTable() && $class->name !== $class->rootEntityName)
+            || in_array($class->name, $this->em->getConfiguration()->getSchemaIgnoreClasses());
     }
 
     private function gatherColumns(ClassMetadata $class, Table $table): void
@@ -673,8 +673,8 @@ final class SchemaTool extends BaseTool
         $discrColumn = $class->discriminatorColumn;
 
         if (
-            !isset($discrColumn['type']) ||
-            (strtolower($discrColumn['type']) === 'string' && !isset($discrColumn['length']))
+            !isset($discrColumn['type'])
+            || (strtolower($discrColumn['type']) === 'string' && !isset($discrColumn['length']))
         ) {
             $discrColumn['type'] = 'string';
             $discrColumn['length'] = 255;

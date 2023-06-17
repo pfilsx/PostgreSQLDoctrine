@@ -10,6 +10,9 @@ use Pfilsx\PostgreSQLDoctrine\Tests\Fixtures\Enum\TestUnitEnum;
 use Pfilsx\PostgreSQLDoctrine\Tools\EnumTool;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @see EnumTool
+ */
 final class EnumToolTest extends TestCase
 {
     /**
