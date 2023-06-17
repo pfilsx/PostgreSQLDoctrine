@@ -12,7 +12,7 @@ final class EnumTypeUsageAsset
 
     private ?string $default;
 
-    public function __construct(string $table, string $column, ?string $default = null)
+    public function __construct(string $table, string $column, string $default = null)
     {
         $this->table = $table;
         $this->column = $column;

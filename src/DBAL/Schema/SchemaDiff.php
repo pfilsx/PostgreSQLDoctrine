@@ -22,7 +22,7 @@ final class SchemaDiff extends BaseSchemaDiff
         array $createdTables = [],
         array $alteredTables = [],
         array $droppedTables = [],
-        ?Schema $fromSchema = null,
+        Schema $fromSchema = null,
         array $createdSchemas = [],
         array $droppedSchemas = [],
         array $createdSequences = [],
