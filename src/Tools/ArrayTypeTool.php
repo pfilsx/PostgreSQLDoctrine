@@ -45,7 +45,7 @@ final class ArrayTypeTool
      *
      * @return string
      */
-    public static function convertPHPArrayToDatabaseArrayString(array $array, ArrayTypeEnum $type, AbstractPlatform $platform = null): string
+    public static function convertPHPArrayToDatabaseArrayString(array $array, ArrayTypeEnum $type, ?AbstractPlatform $platform = null): string
     {
         if ($array === []) {
             return '{}';
@@ -70,7 +70,7 @@ final class ArrayTypeTool
      *
      * @return bool[]|int[]|string[]
      */
-    public static function convertDatabaseArrayStringToPHPArray(string $value, ArrayTypeEnum $type, AbstractPlatform $platform = null): array
+    public static function convertDatabaseArrayStringToPHPArray(string $value, ArrayTypeEnum $type, ?AbstractPlatform $platform = null): array
     {
         if ($value === '{}') {
             return [];

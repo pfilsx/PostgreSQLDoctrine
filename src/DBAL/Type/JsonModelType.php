@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 abstract class JsonModelType extends JsonType
 {
-    private null|AbstractObjectNormalizer|TraceableNormalizer $normalizer = null;
+    private AbstractObjectNormalizer|TraceableNormalizer|null $normalizer = null;
 
     abstract public static function getTypeName(): string;
 
@@ -26,7 +26,7 @@ abstract class JsonModelType extends JsonType
         return static::getTypeName();
     }
 
-    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
+    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): ?string
     {
         if ($value === null) {
             return null;

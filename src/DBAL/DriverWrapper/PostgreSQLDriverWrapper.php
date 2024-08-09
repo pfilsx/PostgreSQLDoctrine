@@ -11,12 +11,11 @@ use Doctrine\DBAL\Driver\Connection as DriverConnection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Platform\PostgreSQLPlatform;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\PostgreSQLSchemaManager;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\EnumType;
 
-final class PostgreSQLDriverWrapper implements VersionAwarePlatformDriver
+final class PostgreSQLDriverWrapper implements Driver
 {
     private Driver $innerDriver;
 
@@ -34,11 +33,6 @@ final class PostgreSQLDriverWrapper implements VersionAwarePlatformDriver
     }
 
     public function getDatabasePlatform(): PostgreSQLPlatform
-    {
-        return new PostgreSQLPlatform();
-    }
-
-    public function createDatabasePlatformForVersion($version): PostgreSQLPlatform
     {
         return new PostgreSQLPlatform();
     }
