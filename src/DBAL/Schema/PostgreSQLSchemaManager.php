@@ -61,7 +61,7 @@ class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaMana
         return new Comparator($this->_platform);
     }
 
-    protected function selectTableColumns(string $databaseName, string $tableName = null): Result
+    protected function selectTableColumns(string $databaseName, ?string $tableName = null): Result
     {
         $sql = 'SELECT';
 

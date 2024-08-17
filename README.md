@@ -1,9 +1,9 @@
 PostgreSQL Doctrine
 ==============
 
-[![Latest Stable Version](http://poser.pugx.org/pfilsx/postgresql-doctrine/v)](https://packagist.org/packages/pfilsx/postgresql-doctrine)
-[![PHP Version Require](http://poser.pugx.org/pfilsx/postgresql-doctrine/require/php)](https://packagist.org/packages/pfilsx/postgresql-doctrine)
-[![Total Downloads](http://poser.pugx.org/pfilsx/postgresql-doctrine/downloads)](https://packagist.org/packages/pfilsx/postgresql-doctrine)
+![Packagist Version](https://img.shields.io/packagist/v/pfilsx/postgresql-doctrine?label=latest%20stable)
+![Packagist Dependency Version](https://img.shields.io/packagist/dependency-v/pfilsx/postgresql-doctrine/php)
+![Packagist Downloads](https://img.shields.io/packagist/dt/pfilsx/postgresql-doctrine?color=0375b6)
 
 Description
 ------------

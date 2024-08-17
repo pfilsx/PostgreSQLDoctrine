@@ -27,7 +27,7 @@ final class Table extends BaseTable
      *
      * @return self
      */
-    public function modifyColumn($name, array $options, string $enumClass = null): self
+    public function modifyColumn($name, array $options, ?string $enumClass = null): self
     {
         $column = $this->getColumn($name);
         $column->setOptions($options);

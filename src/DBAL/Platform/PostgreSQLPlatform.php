@@ -51,7 +51,7 @@ class PostgreSQLPlatform extends BasePlatform
     /**
      * @param EnumTypeAsset $type
      *
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return string
      */
@@ -81,25 +81,23 @@ class PostgreSQLPlatform extends BasePlatform
         $result = [];
         $typeName = $to->getQuotedName($this);
 
-        foreach (array_diff($toLabels, $fromLabels) as $label) {
-            $result[] = "ALTER TYPE {$typeName} ADD VALUE {$this->quoteEnumLabel($label)}";
-        }
-
         $removedLabels = array_diff($fromLabels, $toLabels);
 
         if (count($removedLabels) < 1) {
+            foreach (array_diff($toLabels, $fromLabels) as $label) {
+                $result[] = "ALTER TYPE {$typeName} ADD VALUE {$this->quoteEnumLabel($label)}";
+            }
+
             return $result;
         }
-
-        $self = $this;
 
         $result[] = "ALTER TYPE {$typeName} RENAME TO {$typeName}_old";
         $result[] = $this->getCreateTypeSql($to);
         $result[] = $this->getCommentOnTypeSql($to);
 
         foreach ($to->getUsages() as $usage) {
-            $tableName = $this->quoteIdentifier($usage->getTable());
-            $columnName = $this->quoteIdentifier($usage->getColumn());
+            $tableName = $usage->getQuotedTableName($this);
+            $columnName = $usage->getQuotedColumnName($this);
             if (($default = $usage->getDefault()) !== null) {
                 $result[] = sprintf('ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT', $tableName, $columnName);
             }
