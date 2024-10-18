@@ -8,7 +8,9 @@
 | CAST()                  | CAST                  | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Cast](../src/ORM/Query/AST/Functions/Cast.php)                             |
 | CEIL()                  | CEIL                  | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Ceil](../src/ORM/Query/AST/Functions/Ceil.php)                             |
 | COUNT()                 | COUNT                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Count](../src/ORM/Query/AST/Functions/Count.php)                           |
+| EXTRACT()               | EXTRACT               | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Extract](../src/ORM/Query/AST/Functions/Extract.php)                       |
 | FLOOR()                 | FLOOR                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Floor](../src/ORM/Query/AST/Functions/Floor.php)                           |
+| ILIKE()                 | ILIKE                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ILike](../src/ORM/Query/AST/Functions/ILike.php)                           |
 | JSON_AGG()              | JSON_AGG              | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\JsonAgg](../src/ORM/Query/AST/Functions/JsonAgg.php)                       |
 | JSON_ARRAY_LENGTH()     | JSON_ARRAY_LENGTH     | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\JsonArrayLength](../src/ORM/Query/AST/Functions/JsonArrayLength.php)       |
 | JSONB_AGG()             | JSONB_AGG             | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\JsonbAgg](../src/ORM/Query/AST/Functions/JsonbAgg.php)                     |

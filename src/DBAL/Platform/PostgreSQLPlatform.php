@@ -102,7 +102,7 @@ class PostgreSQLPlatform extends BasePlatform
                 $result[] = sprintf('ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT', $tableName, $columnName);
             }
             $result[] = sprintf(
-                'ALTER TABLE %1$s ALTER COLUMN %2$s TYPE %3$s USING LOWER(%2$s::text)::%3$s',
+                'ALTER TABLE %1$s ALTER COLUMN %2$s TYPE %3$s USING (%2$s::text)::%3$s',
                 $tableName,
                 $columnName,
                 $typeName
@@ -128,15 +128,13 @@ class PostgreSQLPlatform extends BasePlatform
         return "DROP TYPE {$type->getQuotedName($this)}";
     }
 
-    public function quoteEnumLabel(mixed $label): int|string
+    public function quoteEnumLabel(mixed $label): string
     {
-        if (\is_string($label)) {
-            return $this->quoteStringLiteral($label);
-        } elseif (\is_int($label)) {
-            return $label;
-        } else {
-            throw new InvalidArgumentException('Invalid custom type labels specified. Only string and integers are supported');
+        if (!\is_string($label)) {
+            throw new InvalidArgumentException('Invalid custom type labels specified. Only string labels are supported');
         }
+
+        return $this->quoteStringLiteral($label);
     }
 
     public function columnsEqual(Column $column1, Column $column2): bool
