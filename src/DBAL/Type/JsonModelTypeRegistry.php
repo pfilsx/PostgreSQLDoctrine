@@ -6,15 +6,16 @@ namespace Pfilsx\PostgreSQLDoctrine\DBAL\Type;
 
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Types\Type;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\Serializer\Debug\TraceableNormalizer;
-use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Pfilsx\PostgreSQLDoctrine\Normalizer\JsonModelNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class JsonModelTypeRegistry
 {
-    private static AbstractObjectNormalizer|TraceableNormalizer $objectNormalizer;
+    /**
+     * @var null|DenormalizerInterface|JsonModelNormalizer|NormalizerInterface
+     */
+    private static mixed $objectNormalizer = null;
 
     private static array $typesMap = [];
 
@@ -45,15 +46,18 @@ final class JsonModelTypeRegistry
         return array_key_exists($name, self::$typesMap);
     }
 
-    public static function getObjectNormalizer(): AbstractObjectNormalizer|TraceableNormalizer
+    /**
+     * @return DenormalizerInterface|JsonModelNormalizer|NormalizerInterface
+     */
+    public static function getObjectNormalizer(): mixed
     {
-        return self::$objectNormalizer ??= new ObjectNormalizer(
-            nameConverter: new CamelCaseToSnakeCaseNameConverter(),
-            propertyTypeExtractor: new ReflectionExtractor()
-        );
+        return self::$objectNormalizer ??= new JsonModelNormalizer();
     }
 
-    public static function setObjectNormalizer(AbstractObjectNormalizer|TraceableNormalizer $objectNormalizer): void
+    /**
+     * @param DenormalizerInterface|JsonModelNormalizer|NormalizerInterface $objectNormalizer
+     */
+    public static function setObjectNormalizer(mixed $objectNormalizer): void
     {
         self::$objectNormalizer = $objectNormalizer;
     }
