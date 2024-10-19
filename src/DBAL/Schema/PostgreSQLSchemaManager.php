@@ -69,7 +69,7 @@ class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaMana
             $sql .= ' c.relname AS table_name, n.nspname AS schema_name,';
         }
 
-        $sql .= <<<'SQL'
+        $sql .= sprintf(<<<'SQL'
             a.attnum,
             quote_ident(a.attname) AS field,
             t.typname AS type,
@@ -85,11 +85,7 @@ class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaMana
                 AND pg_index.indkey[0] = a.attnum
                 AND pg_index.indisprimary = 't'
             ) AS pri,
-            (SELECT pg_get_expr(adbin, adrelid)
-             FROM pg_attrdef
-             WHERE c.oid = pg_attrdef.adrelid
-                AND pg_attrdef.adnum=a.attnum
-            ) AS default,
+            (%s) AS default,
             (SELECT pg_description.description
                 FROM pg_description WHERE pg_description.objoid = c.oid AND a.attnum = pg_description.objsubid
             ) AS comment,
@@ -105,7 +101,8 @@ class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaMana
                 LEFT JOIN pg_depend d
                     ON d.objid = c.oid
                         AND d.deptype = 'e'
-SQL;
+                        AND d.classid = (SELECT oid FROM pg_class WHERE relname = 'pg_class')
+SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
 
         $conditions = array_merge([
             'a.attnum > 0',
@@ -213,6 +210,7 @@ SQL;
 
                 break;
 
+            case 'json':
             case 'text':
             case '_varchar':
             case 'varchar':
@@ -302,7 +300,7 @@ SQL;
             }
         }
 
-        if (isset($tableColumn['collation']) && !empty($tableColumn['collation'])) {
+        if (!empty($tableColumn['collation'])) {
             $column->setPlatformOption('collation', $tableColumn['collation']);
         }
 

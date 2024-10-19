@@ -153,6 +153,16 @@ class PostgreSQLPlatform extends BasePlatform
         return is_subclass_of($type1, $type2::class) || is_subclass_of($type2, $type1::class);
     }
 
+    public function getDefaultColumnValueSQLSnippet(): string
+    {
+        return <<<'SQL'
+             SELECT pg_get_expr(adbin, adrelid)
+             FROM pg_attrdef
+             WHERE c.oid = pg_attrdef.adrelid
+                AND pg_attrdef.adnum=a.attnum
+        SQL;
+    }
+
     protected function initializeDoctrineTypeMappings(): void
     {
         parent::initializeDoctrineTypeMappings();
