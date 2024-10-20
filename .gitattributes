@@ -1,3 +1,7 @@
-*.md export-ignore
 .* export-ignore
+*.md export-ignore
+/tests export-ignore
+/phpunit.xml.dist export-ignore
+/.github export-ignore
+/.php-cs-fixer.php export-ignore
 /docs export-ignore

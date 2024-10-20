@@ -26,6 +26,10 @@ $config
         'no_superfluous_phpdoc_tags' => false,
         'yoda_style' => ['equal' => false, 'identical'=>false, 'less_and_greater' => false],
         'no_unused_imports' => true,
+        'trailing_comma_in_multiline' => [
+            'after_heredoc' => true,
+            'elements' => ['array_destructuring', 'arrays', 'match']
+        ]
     ])
     ->setUsingCache(false)
     ->setFinder($finder)

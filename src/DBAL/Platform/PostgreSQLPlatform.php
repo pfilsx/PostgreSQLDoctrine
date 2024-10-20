@@ -14,7 +14,7 @@ use Pfilsx\PostgreSQLDoctrine\DBAL\Schema\PostgreSQLSchemaManager;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\EnumType;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\JsonModelType;
 
-final class PostgreSQLPlatform extends BasePlatform
+class PostgreSQLPlatform extends BasePlatform
 {
     public function createSchemaManager(Connection $connection): PostgreSQLSchemaManager
     {
@@ -51,7 +51,7 @@ final class PostgreSQLPlatform extends BasePlatform
     /**
      * @param EnumTypeAsset $type
      *
-     * @throws Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      *
      * @return string
      */
@@ -81,30 +81,28 @@ final class PostgreSQLPlatform extends BasePlatform
         $result = [];
         $typeName = $to->getQuotedName($this);
 
-        foreach (array_diff($toLabels, $fromLabels) as $label) {
-            $result[] = "ALTER TYPE {$typeName} ADD VALUE {$this->quoteEnumLabel($label)}";
-        }
-
         $removedLabels = array_diff($fromLabels, $toLabels);
 
         if (count($removedLabels) < 1) {
+            foreach (array_diff($toLabels, $fromLabels) as $label) {
+                $result[] = "ALTER TYPE {$typeName} ADD VALUE {$this->quoteEnumLabel($label)}";
+            }
+
             return $result;
         }
-
-        $self = $this;
 
         $result[] = "ALTER TYPE {$typeName} RENAME TO {$typeName}_old";
         $result[] = $this->getCreateTypeSql($to);
         $result[] = $this->getCommentOnTypeSql($to);
 
         foreach ($to->getUsages() as $usage) {
-            $tableName = $this->quoteIdentifier($usage->getTable());
-            $columnName = $this->quoteIdentifier($usage->getColumn());
+            $tableName = $usage->getQuotedTableName($this);
+            $columnName = $usage->getQuotedColumnName($this);
             if (($default = $usage->getDefault()) !== null) {
                 $result[] = sprintf('ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT', $tableName, $columnName);
             }
             $result[] = sprintf(
-                'ALTER TABLE %1$s ALTER COLUMN %2$s TYPE %3$s USING LOWER(%2$s::text)::%3$s',
+                'ALTER TABLE %1$s ALTER COLUMN %2$s TYPE %3$s USING (%2$s::text)::%3$s',
                 $tableName,
                 $columnName,
                 $typeName
@@ -130,15 +128,13 @@ final class PostgreSQLPlatform extends BasePlatform
         return "DROP TYPE {$type->getQuotedName($this)}";
     }
 
-    public function quoteEnumLabel(mixed $label): int|string
+    public function quoteEnumLabel(mixed $label): string
     {
-        if (\is_string($label)) {
-            return $this->quoteStringLiteral($label);
-        } elseif (\is_int($label)) {
-            return $label;
-        } else {
-            throw new InvalidArgumentException('Invalid custom type labels specified. Only string and integers are supported');
+        if (!\is_string($label)) {
+            throw new InvalidArgumentException('Invalid custom type labels specified. Only string labels are supported');
         }
+
+        return $this->quoteStringLiteral($label);
     }
 
     public function columnsEqual(Column $column1, Column $column2): bool
@@ -155,6 +151,16 @@ final class PostgreSQLPlatform extends BasePlatform
         }
 
         return is_subclass_of($type1, $type2::class) || is_subclass_of($type2, $type1::class);
+    }
+
+    public function getDefaultColumnValueSQLSnippet(): string
+    {
+        return <<<'SQL'
+             SELECT pg_get_expr(adbin, adrelid)
+             FROM pg_attrdef
+             WHERE c.oid = pg_attrdef.adrelid
+                AND pg_attrdef.adnum=a.attnum
+        SQL;
     }
 
     protected function initializeDoctrineTypeMappings(): void

@@ -5,6 +5,12 @@
 |-------------------------|-----------------------|-------------------------------------------------------------------------------------------------------------------------------|
 | ARRAY_AGG()             | ARRAY_AGG             | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ArrayAgg](../src/ORM/Query/AST/Functions/ArrayAgg.php)                     |
 | ARRAY_TO_JSON()         | ARRAY_TO_JSON         | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ArrayToJson](../src/ORM/Query/AST/Functions/ArrayToJson.php)               |
+| CAST()                  | CAST                  | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Cast](../src/ORM/Query/AST/Functions/Cast.php)                             |
+| CEIL()                  | CEIL                  | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Ceil](../src/ORM/Query/AST/Functions/Ceil.php)                             |
+| COUNT()                 | COUNT                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Count](../src/ORM/Query/AST/Functions/Count.php)                           |
+| EXTRACT()               | EXTRACT               | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Extract](../src/ORM/Query/AST/Functions/Extract.php)                       |
+| FLOOR()                 | FLOOR                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Floor](../src/ORM/Query/AST/Functions/Floor.php)                           |
+| ILIKE()                 | ILIKE                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ILike](../src/ORM/Query/AST/Functions/ILike.php)                           |
 | JSON_AGG()              | JSON_AGG              | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\JsonAgg](../src/ORM/Query/AST/Functions/JsonAgg.php)                       |
 | JSON_ARRAY_LENGTH()     | JSON_ARRAY_LENGTH     | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\JsonArrayLength](../src/ORM/Query/AST/Functions/JsonArrayLength.php)       |
 | JSONB_AGG()             | JSONB_AGG             | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\JsonbAgg](../src/ORM/Query/AST/Functions/JsonbAgg.php)                     |
@@ -21,6 +27,8 @@
 | JSON_OBJECT_KEYS()      | JSON_OBJECT_KEYS      | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\JsonObjectKeys](../src/ORM/Query/AST/Functions/JsonObjectKeys.php)         |
 | PHRASETO_TSQUERY()      | PHRASETO_TSQUERY      | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\PhraseToTsQuery](../src/ORM/Query/AST/Functions/PhraseToTsQuery.php)       |
 | PLAINTO_TSQUERY()       | PLAINTO_TSQUERY       | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\PlainToTsQuery](../src/ORM/Query/AST/Functions/PlainToTsQuery.php)         |
+| RANDOM()                | RANDOM                | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Random](../src/ORM/Query/AST/Functions/Random.php)                         |
+| ROUND()                 | ROUND                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\Round](../src/ORM/Query/AST/Functions/Round.php)                           |
 | STRING_AGG()            | STRING_AGG            | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\StringAgg](../src/ORM/Query/AST/Functions/StringAgg.php)                   |
 | ARRAY[]                 | ARRAY                 | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToArray](../src/ORM/Query/AST/Functions/ToArray.php)                       |
 | BIGINT[]                | BIGINT_ARRAY          | [Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions\ToBigIntArray](../src/ORM/Query/AST/Functions/ToBigIntArray.php)           |

@@ -7,12 +7,16 @@ namespace Pfilsx\PostgreSQLDoctrine\DBAL\Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\JsonType;
-use Symfony\Component\Serializer\Debug\TraceableNormalizer;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Pfilsx\PostgreSQLDoctrine\Normalizer\JsonModelNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 abstract class JsonModelType extends JsonType
 {
-    private null|AbstractObjectNormalizer|TraceableNormalizer $normalizer = null;
+    /**
+     * @var null|DenormalizerInterface|JsonModelNormalizer|NormalizerInterface
+     */
+    private mixed $normalizer = null;
 
     abstract public static function getTypeName(): string;
 
@@ -26,13 +30,13 @@ abstract class JsonModelType extends JsonType
         return static::getTypeName();
     }
 
-    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
+    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): ?string
     {
         if ($value === null) {
             return null;
         }
 
-        if (!\is_object($value)) {
+        if (!\is_object($value) || get_class($value) !== static::getModelClass()) {
             throw ConversionException::conversionFailed($value, $this->getName());
         }
 
@@ -55,12 +59,18 @@ abstract class JsonModelType extends JsonType
         );
     }
 
-    public function setObjectNormalizer(AbstractObjectNormalizer|TraceableNormalizer $normalizer): void
+    /**
+     * @param DenormalizerInterface|JsonModelNormalizer|NormalizerInterface $normalizer
+     */
+    public function setObjectNormalizer(mixed $normalizer): void
     {
         $this->normalizer = $normalizer;
     }
 
-    protected function getObjectNormalizer(): AbstractObjectNormalizer|TraceableNormalizer
+    /**
+     * @return DenormalizerInterface|JsonModelNormalizer|NormalizerInterface
+     */
+    protected function getObjectNormalizer(): mixed
     {
         if ($this->normalizer === null) {
             throw new \RuntimeException('JsonModelType requires object normalizer to be set');

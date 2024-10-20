@@ -9,6 +9,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Index;
 use Doctrine\DBAL\Schema\SchemaException;
+use Doctrine\DBAL\Schema\Sequence;
 use Doctrine\DBAL\Schema\Visitor\RemoveNamespacedAssets;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
@@ -226,10 +227,11 @@ final class SchemaTool extends BaseTool
 
             if (isset($class->table['uniqueConstraints'])) {
                 foreach ($class->table['uniqueConstraints'] as $indexName => $indexData) {
-                    $uniqIndex = new Index($indexName, $this->getIndexColumns($class, $indexData), true, false, [], $indexData['options'] ?? []);
+                    $uniqIndex = new Index('tmp__' . $indexName, $this->getIndexColumns($class, $indexData), true, false, [], $indexData['options'] ?? []);
 
                     foreach ($table->getIndexes() as $tableIndexName => $tableIndex) {
-                        if ($tableIndex->isFullfilledBy($uniqIndex)) {
+                        $method = method_exists($tableIndex, 'isFulfilledBy') ? 'isFulfilledBy' : 'isFullfilledBy';
+                        if ($tableIndex->$method($uniqIndex)) {
                             $table->dropIndex($tableIndexName);
 
                             break;
@@ -270,14 +272,21 @@ final class SchemaTool extends BaseTool
             $this->gatherEnumTypes($class, $schema);
         }
 
+        if (!$this->platform->supportsSchemas()) {
+            $filter = /** @param Sequence|Table $asset */ static function ($asset) use ($schema): bool {
+                return !$asset->isInDefaultNamespace($schema->getName());
+            };
+
+            if (array_filter($schema->getSequences() + $schema->getTables(), $filter) && !$this->platform->canEmulateSchemas()) {
+                $schema->visit(new RemoveNamespacedAssets());
+            }
+        }
+
+        // remove default namespace creation from down migration
         foreach ($this->schemaManager->getExistingSchemaSearchPaths() as $namespace) {
             if (!$schema->hasNamespace($namespace)) {
                 $schema->createNamespace($namespace);
             }
-        }
-
-        if (!$this->platform->supportsSchemas() && !$this->platform->canEmulateSchemas()) {
-            $schema->visit(new RemoveNamespacedAssets());
         }
 
         if ($eventManager->hasListeners(ToolEvents::postGenerateSchema)) {
@@ -294,11 +303,11 @@ final class SchemaTool extends BaseTool
         ClassMetadata $class,
         array $processedClasses
     ): bool {
-        return isset($processedClasses[$class->name]) ||
-            $class->isMappedSuperclass ||
-            $class->isEmbeddedClass ||
-            ($class->isInheritanceTypeSingleTable() && $class->name !== $class->rootEntityName) ||
-            in_array($class->name, $this->em->getConfiguration()->getSchemaIgnoreClasses());
+        return isset($processedClasses[$class->name])
+            || $class->isMappedSuperclass
+            || $class->isEmbeddedClass
+            || ($class->isInheritanceTypeSingleTable() && $class->name !== $class->rootEntityName)
+            || in_array($class->name, $this->em->getConfiguration()->getSchemaIgnoreClasses());
     }
 
     private function gatherColumns(ClassMetadata $class, Table $table): void
@@ -412,7 +421,7 @@ final class SchemaTool extends BaseTool
         }
 
         $options = array_intersect_key($mappingOptions, array_flip(self::KNOWN_COLUMN_OPTIONS));
-        $options['customSchemaOptions'] = array_diff_key($mappingOptions, $options);
+        $options['platformOptions'] = array_diff_key($mappingOptions, $options);
 
         return $options;
     }
@@ -673,8 +682,8 @@ final class SchemaTool extends BaseTool
         $discrColumn = $class->discriminatorColumn;
 
         if (
-            !isset($discrColumn['type']) ||
-            (strtolower($discrColumn['type']) === 'string' && !isset($discrColumn['length']))
+            !isset($discrColumn['type'])
+            || (strtolower($discrColumn['type']) === 'string' && !isset($discrColumn['length']))
         ) {
             $discrColumn['type'] = 'string';
             $discrColumn['length'] = 255;
@@ -689,6 +698,7 @@ final class SchemaTool extends BaseTool
             $options['columnDefinition'] = $discrColumn['columnDefinition'];
         }
 
+        $options = $this->gatherColumnOptions($discrColumn) + $options;
         $table->addColumn($discrColumn['name'], $discrColumn['type'], $options);
     }
 
