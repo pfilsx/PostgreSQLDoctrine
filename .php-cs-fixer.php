@@ -2,7 +2,7 @@
 
 $projectDir = __DIR__;
 
-$finder = PhpCsFixer\Finder::create()->in(["$projectDir/src"]);
+$finder = PhpCsFixer\Finder::create()->in(["$projectDir/src", "$projectDir/tests/Unit"]);
 $config = new PhpCsFixer\Config();
 $config
     ->setRiskyAllowed(true)
