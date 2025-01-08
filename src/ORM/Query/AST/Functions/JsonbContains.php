@@ -20,6 +20,8 @@ use Doctrine\ORM\Query\SqlWalker;
  * @example JSONB_CONTAINS(entity.field, '{"a": 1}')
  *
  * @deprecated use Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Contains instead
+ *
+ * @codeCoverageIgnore
  */
 final class JsonbContains extends FunctionNode
 {
