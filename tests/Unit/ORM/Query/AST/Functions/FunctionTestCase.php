@@ -48,10 +48,25 @@ abstract class FunctionTestCase extends TestCase
 
     abstract protected function getFunction(): Query\AST\Functions\FunctionNode;
 
+    /**
+     * @return array<string, class-string>
+     */
+    protected function getAdditionalCustomFunctions(): array
+    {
+        return [];
+    }
+
     protected function createEntityManagerMock()
     {
         $em = $this->createMock(EntityManager::class);
-        $em->method('getConfiguration')->willReturn($this->createMock(Configuration::class));
+
+        $configuration = new Configuration();
+
+        foreach ($this->getAdditionalCustomFunctions() as $name => $customFunction) {
+            $configuration->addCustomStringFunction($name, $customFunction);
+        }
+
+        $em->method('getConfiguration')->willReturn($configuration);
 
         return $em;
     }
@@ -84,6 +99,8 @@ abstract class FunctionTestCase extends TestCase
                     : $expr->pathExpression
                 );
         });
+
+        $mock->method('walkFunction')->willReturn('{FUNC}');
 
         return $mock;
     }
