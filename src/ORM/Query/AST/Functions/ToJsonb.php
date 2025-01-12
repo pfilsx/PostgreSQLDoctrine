@@ -15,6 +15,7 @@ use Doctrine\ORM\Query\Parser;
  * @example TO_JSONB(entity.field)
  * @example TO_JSONB('[1,2,3]')
  * @example TO_JSONB('{"a": 2}')
+ * @example TO_JSONB(:text)
  */
 class ToJsonb extends AbstractSingleNodeFunction
 {
