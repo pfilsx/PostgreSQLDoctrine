@@ -30,7 +30,7 @@ class Extract extends FunctionNode
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
         $parser->match(Lexer::T_IDENTIFIER);
-        $this->expr = $parser->getLexer()->token['value'];
+        $this->expr = $parser->getLexer()->token?->value;
         $parser->match(Lexer::T_FROM);
 
         $this->from = $parser->StringPrimary();

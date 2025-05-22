@@ -25,14 +25,14 @@ final class JsonGetArrayElement extends JsonGetField
         $parser->match(Lexer::T_COMMA);
 
         $parser->match(Lexer::T_INTEGER);
-        $this->path[] = new Literal(Literal::NUMERIC, $parser->getLexer()->token['value']);
+        $this->path[] = new Literal(Literal::NUMERIC, $parser->getLexer()->token?->value);
 
         if (!$parser->getLexer()->isNextToken(Lexer::T_CLOSE_PARENTHESIS)) {
             while ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
                 $parser->match(Lexer::T_COMMA);
 
                 $parser->match(Lexer::T_INTEGER);
-                $this->path[] = new Literal(Literal::NUMERIC, $parser->getLexer()->token['value']);
+                $this->path[] = new Literal(Literal::NUMERIC, $parser->getLexer()->token?->value);
             }
         }
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);

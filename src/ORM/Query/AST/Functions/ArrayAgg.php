@@ -49,7 +49,7 @@ final class ArrayAgg extends AbstractAggregateWithFilterFunction implements Type
             $parser->match(Lexer::T_COMMA);
             $parser->match(Lexer::T_STRING);
 
-            $this->returnType = $lexer->token['value'];
+            $this->returnType = $lexer->token?->value;
         }
 
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);

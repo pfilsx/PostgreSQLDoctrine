@@ -34,7 +34,7 @@ final class ArrayExpression extends Node
         \assert($lexer->lookahead !== null);
         $nodes = [];
 
-        switch ($lexer->lookahead['type']) {
+        switch ($lexer->lookahead->type) {
             case Lexer::T_INPUT_PARAMETER:
                 $nodes[] = $parser->InputParameter();
 
