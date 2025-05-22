@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\Tests\Unit\DBAL\Type;
 
-
 use Pfilsx\PostgreSQLDoctrine\DBAL\Platform\PostgreSQLPlatform;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\BigIntArrayType;
 use Pfilsx\PostgreSQLDoctrine\DBAL\Type\BooleanArrayType;

@@ -34,7 +34,7 @@ final class Cast extends FunctionNode
 
         $type = $parser->getLexer()->token['value'] ?? null;
 
-        if (!is_string($type)) {
+        if (!\is_string($type)) {
             return;
         }
 
@@ -45,6 +45,6 @@ final class Cast extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return \sprintf('CAST(%s as %s)', $this->source->dispatch($sqlWalker), $this->type);
+        return \sprintf('CAST(%s AS %s)', $this->source->dispatch($sqlWalker), $this->type);
     }
 }

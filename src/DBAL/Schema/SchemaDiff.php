@@ -67,7 +67,7 @@ final class SchemaDiff extends BaseSchemaDiff
         }
 
         foreach ($this->getAlteredTypes() as $alterTypeArray) {
-            $sql = array_merge(
+            $sql = \array_merge(
                 $sql,
                 $platform->getAlterTypeSql($alterTypeArray['from'], $alterTypeArray['to'])
             );

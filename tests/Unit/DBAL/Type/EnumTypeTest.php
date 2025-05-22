@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pfilsx\PostgreSQLDoctrine\Tests\Unit\DBAL\Type;
 
 use Pfilsx\PostgreSQLDoctrine\DBAL\Platform\PostgreSQLPlatform;
@@ -22,7 +24,7 @@ final class EnumTypeTest extends TestCase
         $this->platform = $this->createMock(PostgreSQLPlatform::class);
         $this->type = new EnumType();
     }
-    
+
     public function testGetName(): void
     {
         self::assertEquals('enum', $this->type->getName());
@@ -31,7 +33,7 @@ final class EnumTypeTest extends TestCase
     public function testGetSqlDeclaration(): void
     {
         self::assertSame('test_string_backed_enum_type', $this->type->getSQLDeclaration([
-            'enumType' => TestStringBackedEnum::class
+            'enumType' => TestStringBackedEnum::class,
         ], $this->platform));
     }
 

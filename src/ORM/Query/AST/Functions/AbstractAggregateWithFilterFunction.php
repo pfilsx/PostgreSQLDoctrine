@@ -27,7 +27,7 @@ abstract class AbstractAggregateWithFilterFunction extends FunctionNode
 
         $lookaheadValue = $lexer->lookahead['value'] ?? null;
 
-        if (!is_string($lookaheadValue) || mb_strtoupper($lookaheadValue) !== self::FILTER_IDENTIFIER) {
+        if (!\is_string($lookaheadValue) || \mb_strtoupper($lookaheadValue) !== self::FILTER_IDENTIFIER) {
             return;
         }
 

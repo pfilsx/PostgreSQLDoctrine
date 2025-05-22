@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions;
 
+use Doctrine\ORM\Query\AST\Literal;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 
@@ -23,12 +24,16 @@ final class JsonGetArrayElementAsText extends JsonGetFieldAsText
 
         $this->field = $parser->StringPrimary();
         $parser->match(Lexer::T_COMMA);
-        $this->path[] = $parser->ArithmeticPrimary();
+
+        $parser->match(Lexer::T_INTEGER);
+        $this->path[] = new Literal(Literal::NUMERIC, $parser->getLexer()->token['value']);
 
         if (!$parser->getLexer()->isNextToken(Lexer::T_CLOSE_PARENTHESIS)) {
             while ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
                 $parser->match(Lexer::T_COMMA);
-                $this->path[] = $parser->ArithmeticPrimary();
+
+                $parser->match(Lexer::T_INTEGER);
+                $this->path[] = new Literal(Literal::NUMERIC, $parser->getLexer()->token['value']);
             }
         }
 

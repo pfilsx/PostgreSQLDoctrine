@@ -15,6 +15,7 @@ use Doctrine\ORM\Query\Parser;
  * @example TO_JSON(entity.field)
  * @example TO_JSON('[1,2,3]')
  * @example TO_JSON('{"a": 2}')
+ * @example TO_JSON(:text)
  */
 class ToJson extends AbstractSingleNodeFunction
 {

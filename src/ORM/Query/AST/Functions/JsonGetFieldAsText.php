@@ -18,14 +18,14 @@ class JsonGetFieldAsText extends JsonGetField
 {
     public function getSql(SqlWalker $sqlWalker): string
     {
-        $path = array_map(static fn (Node $node) => $node->dispatch($sqlWalker), $this->path);
+        $path = \array_map(static fn (Node $node) => $node->dispatch($sqlWalker), $this->path);
 
-        $lastPathElement = array_pop($path);
+        $lastPathElement = \array_pop($path);
 
         $sql = $this->field->dispatch($sqlWalker);
 
-        if (count($path) > 0) {
-            $sql .= sprintf('->%s', implode('->', $path));
+        if (\count($path) > 0) {
+            $sql .= \sprintf('->%s', \implode('->', $path));
         }
 
         return "$sql->>$lastPathElement";

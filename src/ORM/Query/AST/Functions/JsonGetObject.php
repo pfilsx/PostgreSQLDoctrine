@@ -36,6 +36,6 @@ class JsonGetObject extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return "{$this->field->dispatch($sqlWalker)} #> {$this->path->dispatch($sqlWalker)}";
+        return "({$this->field->dispatch($sqlWalker)} #> {$this->path->dispatch($sqlWalker)})";
     }
 }

@@ -51,7 +51,7 @@ class TsHeadline extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return sprintf('TS_HEADLINE(%s, %s%s%s)',
+        return \sprintf('TS_HEADLINE(%s, %s%s%s)',
             $this->node1->dispatch($sqlWalker),
             $this->node2->dispatch($sqlWalker),
             $this->node3 !== null ? ', ' . $this->node3->dispatch($sqlWalker) : '',

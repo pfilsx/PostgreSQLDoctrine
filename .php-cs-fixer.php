@@ -2,7 +2,7 @@
 
 $projectDir = __DIR__;
 
-$finder = PhpCsFixer\Finder::create()->in(["$projectDir/src"]);
+$finder = PhpCsFixer\Finder::create()->in(["$projectDir/src", "$projectDir/tests/Unit"]);
 $config = new PhpCsFixer\Config();
 $config
     ->setRiskyAllowed(true)
@@ -29,7 +29,8 @@ $config
         'trailing_comma_in_multiline' => [
             'after_heredoc' => true,
             'elements' => ['array_destructuring', 'arrays', 'match']
-        ]
+        ],
+        'native_function_invocation' => ['scope' => 'all', 'include' => ['@internal'], 'strict' => false],
     ])
     ->setUsingCache(false)
     ->setFinder($finder)

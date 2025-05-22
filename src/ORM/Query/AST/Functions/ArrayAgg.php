@@ -57,7 +57,7 @@ final class ArrayAgg extends AbstractAggregateWithFilterFunction implements Type
 
     public function getFunctionSql(SqlWalker $sqlWalker): string
     {
-        return sprintf('ARRAY_AGG(%s%s)', $this->distinct ? 'DISTINCT ' : '', $this->expr->dispatch($sqlWalker));
+        return \sprintf('ARRAY_AGG(%s%s)', $this->distinct ? 'DISTINCT ' : '', $this->expr->dispatch($sqlWalker));
     }
 
     public function getReturnType(): Type

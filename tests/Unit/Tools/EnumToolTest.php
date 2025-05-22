@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pfilsx\PostgreSQLDoctrine\Tests\Unit\Tools;
 
 use Doctrine\DBAL\Exception\InvalidArgumentException;
@@ -17,6 +19,7 @@ final class EnumToolTest extends TestCase
 {
     /**
      * @dataProvider providerTestGetEnumTypeNameFromClassName
+     *
      * @see EnumTool::getEnumTypeNameFromClassName()
      */
     public function testGetEnumTypeNameFromClassName(string $className, ?string $expectedName): void
@@ -42,6 +45,7 @@ final class EnumToolTest extends TestCase
 
     /**
      * @dataProvider providerTestGetEnumLabelsByClassName
+     *
      * @see EnumTool::getEnumLabelsByClassName()
      */
     public function testGetEnumLabelsByClassName(string $className, bool $expectException): void

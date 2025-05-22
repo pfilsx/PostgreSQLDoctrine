@@ -25,7 +25,7 @@ final class Column extends \Doctrine\DBAL\Schema\Column
      */
     public function toArray(): array
     {
-        return array_merge([
+        return \array_merge([
             'name' => $this->_name,
             'type' => $this->_type,
             'default' => $this->_default,

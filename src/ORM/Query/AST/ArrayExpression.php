@@ -25,13 +25,13 @@ final class ArrayExpression extends Node
 
     public function dispatch($walker): string
     {
-        return implode(', ', array_map(static fn (Node $node) => $node->dispatch($walker), $this->innerNodes));
+        return \implode(', ', \array_map(static fn (Node $node) => $node->dispatch($walker), $this->innerNodes));
     }
 
     public static function parse(Parser $parser): self
     {
         $lexer = $parser->getLexer();
-        assert($lexer->lookahead !== null);
+        \assert($lexer->lookahead !== null);
         $nodes = [];
 
         switch ($lexer->lookahead['type']) {

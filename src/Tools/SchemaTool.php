@@ -41,7 +41,7 @@ final class SchemaTool extends BaseTool
         $this->em = $em;
         $this->platform = $em->getConnection()->getDatabasePlatform();
         $this->quoteStrategy = $em->getConfiguration()->getQuoteStrategy();
-        $this->schemaManager = method_exists(Connection::class, 'createSchemaManager')
+        $this->schemaManager = \method_exists(Connection::class, 'createSchemaManager')
             ? $em->getConnection()->createSchemaManager()
             : $em->getConnection()->getSchemaManager();
     }
@@ -132,8 +132,8 @@ final class SchemaTool extends BaseTool
                         if (isset($class->associationMappings[$identifierField]['inherited'])) {
                             $idMapping = $class->associationMappings[$identifierField];
 
-                            $targetEntity = current(
-                                array_filter(
+                            $targetEntity = \current(
+                                \array_filter(
                                     $classes,
                                     static function (ClassMetadata $class) use ($idMapping): bool {
                                         return $class->name === $idMapping['targetEntity'];
@@ -187,7 +187,7 @@ final class SchemaTool extends BaseTool
                     $pkColumns[] = $this->quoteStrategy->getColumnName($identifierField, $class, $this->platform);
                 } elseif (isset($class->associationMappings[$identifierField])) {
                     $assoc = $class->associationMappings[$identifierField];
-                    assert(is_array($assoc));
+                    \assert(\is_array($assoc));
 
                     foreach ($assoc['joinColumns'] as $joinColumn) {
                         $pkColumns[] = $this->quoteStrategy->getJoinColumnName($joinColumn, $class, $this->platform);
@@ -218,7 +218,7 @@ final class SchemaTool extends BaseTool
 
                     $table->addIndex(
                         $this->getIndexColumns($class, $indexData),
-                        is_numeric($indexName) ? null : $indexName,
+                        \is_numeric($indexName) ? null : $indexName,
                         (array) $indexData['flags'],
                         $indexData['options'] ?? []
                     );
@@ -230,7 +230,7 @@ final class SchemaTool extends BaseTool
                     $uniqIndex = new Index('tmp__' . $indexName, $this->getIndexColumns($class, $indexData), true, false, [], $indexData['options'] ?? []);
 
                     foreach ($table->getIndexes() as $tableIndexName => $tableIndex) {
-                        $method = method_exists($tableIndex, 'isFulfilledBy') ? 'isFulfilledBy' : 'isFullfilledBy';
+                        $method = \method_exists($tableIndex, 'isFulfilledBy') ? 'isFulfilledBy' : 'isFullfilledBy';
                         if ($tableIndex->$method($uniqIndex)) {
                             $table->dropIndex($tableIndexName);
 
@@ -238,7 +238,7 @@ final class SchemaTool extends BaseTool
                         }
                     }
 
-                    $table->addUniqueIndex($uniqIndex->getColumns(), is_numeric($indexName) ? null : $indexName, $indexData['options'] ?? []);
+                    $table->addUniqueIndex($uniqIndex->getColumns(), \is_numeric($indexName) ? null : $indexName, $indexData['options'] ?? []);
                 }
             }
 
@@ -277,7 +277,7 @@ final class SchemaTool extends BaseTool
                 return !$asset->isInDefaultNamespace($schema->getName());
             };
 
-            if (array_filter($schema->getSequences() + $schema->getTables(), $filter) && !$this->platform->canEmulateSchemas()) {
+            if (\array_filter($schema->getSequences() + $schema->getTables(), $filter) && !$this->platform->canEmulateSchemas()) {
                 $schema->visit(new RemoveNamespacedAssets());
             }
         }
@@ -307,7 +307,7 @@ final class SchemaTool extends BaseTool
             || $class->isMappedSuperclass
             || $class->isEmbeddedClass
             || ($class->isInheritanceTypeSingleTable() && $class->name !== $class->rootEntityName)
-            || in_array($class->name, $this->em->getConfiguration()->getSchemaIgnoreClasses());
+            || \in_array($class->name, $this->em->getConfiguration()->getSchemaIgnoreClasses());
     }
 
     private function gatherColumns(ClassMetadata $class, Table $table): void
@@ -351,7 +351,7 @@ final class SchemaTool extends BaseTool
         $options['platformOptions'] = [];
         $options['platformOptions']['version'] = $class->isVersioned && $class->versionField === $mapping['fieldName'];
 
-        if (strtolower($columnType) === 'string' && $options['length'] === null) {
+        if (\strtolower($columnType) === 'string' && $options['length'] === null) {
             $options['length'] = 255;
         }
 
@@ -420,8 +420,8 @@ final class SchemaTool extends BaseTool
             return [];
         }
 
-        $options = array_intersect_key($mappingOptions, array_flip(self::KNOWN_COLUMN_OPTIONS));
-        $options['platformOptions'] = array_diff_key($mappingOptions, $options);
+        $options = \array_intersect_key($mappingOptions, \array_flip(self::KNOWN_COLUMN_OPTIONS));
+        $options['platformOptions'] = \array_diff_key($mappingOptions, $options);
 
         return $options;
     }
@@ -446,7 +446,7 @@ final class SchemaTool extends BaseTool
         array &$blacklistedFks
     ): void {
         foreach ($class->associationMappings as $id => $mapping) {
-            if (isset($mapping['inherited']) && !in_array($id, $class->identifier, true)) {
+            if (isset($mapping['inherited']) && !\in_array($id, $class->identifier, true)) {
                 continue;
             }
 
@@ -607,20 +607,20 @@ final class SchemaTool extends BaseTool
         // Prefer unique constraints over implicit simple indexes created for foreign keys.
         // Also avoids index duplication.
         foreach ($uniqueConstraints as $indexName => $unique) {
-            $theJoinTable->addUniqueIndex($unique['columns'], is_numeric($indexName) ? null : $indexName);
+            $theJoinTable->addUniqueIndex($unique['columns'], \is_numeric($indexName) ? null : $indexName);
         }
 
-        $compositeName = $theJoinTable->getName() . '.' . implode('', $localColumns);
+        $compositeName = $theJoinTable->getName() . '.' . \implode('', $localColumns);
         if (
             isset($addedFks[$compositeName])
             && ($foreignTableName !== $addedFks[$compositeName]['foreignTableName']
-                || count(array_diff($foreignColumns, $addedFks[$compositeName]['foreignColumns'])) > 0)
+                || \count(\array_diff($foreignColumns, $addedFks[$compositeName]['foreignColumns'])) > 0)
         ) {
             foreach ($theJoinTable->getForeignKeys() as $fkName => $key) {
                 if (
-                    count(array_diff($key->getLocalColumns(), $localColumns)) === 0
+                    \count(\array_diff($key->getLocalColumns(), $localColumns)) === 0
                     && (($key->getForeignTableName() !== $foreignTableName)
-                        || count(array_diff($key->getForeignColumns(), $foreignColumns)) > 0)
+                        || \count(\array_diff($key->getForeignColumns(), $foreignColumns)) > 0)
                 ) {
                     $theJoinTable->removeForeignKey($fkName);
 
@@ -655,7 +655,7 @@ final class SchemaTool extends BaseTool
             return [$class, $referencedFieldName];
         }
 
-        if (in_array($referencedColumnName, $class->getIdentifierColumnNames(), true)) {
+        if (\in_array($referencedColumnName, $class->getIdentifierColumnNames(), true)) {
             // it seems to be an entity as foreign key
             foreach ($class->getIdentifierFieldNames() as $fieldName) {
                 if (
@@ -683,7 +683,7 @@ final class SchemaTool extends BaseTool
 
         if (
             !isset($discrColumn['type'])
-            || (strtolower($discrColumn['type']) === 'string' && !isset($discrColumn['length']))
+            || (\strtolower($discrColumn['type']) === 'string' && !isset($discrColumn['length']))
         ) {
             $discrColumn['type'] = 'string';
             $discrColumn['length'] = 255;

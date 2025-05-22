@@ -49,11 +49,11 @@ final class EnumTypeUsageAsset
     private function getQuotedName(string $name, AbstractPlatform $platform): string
     {
         $keywords = $platform->getReservedKeywordsList();
-        $parts = explode('.', $name);
+        $parts = \explode('.', $name);
         foreach ($parts as $k => $v) {
             $parts[$k] = $keywords->isKeyword($v) ? $platform->quoteIdentifier($v) : $v;
         }
 
-        return implode('.', $parts);
+        return \implode('.', $parts);
     }
 }

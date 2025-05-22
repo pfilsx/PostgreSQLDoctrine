@@ -12,13 +12,13 @@ use Doctrine\ORM\Query\Parser;
  *
  * @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING-TABLE
  *
- * @example JSON_OBJECT_KEYS(entity.field)
+ * @example JSONB_OBJECT_KEYS(entity.field)
  */
 class JsonbObjectKeys extends AbstractSingleNodeFunction
 {
     protected function getFunctionName(): string
     {
-        return 'JSON_OBJECT_KEYS';
+        return 'JSONB_OBJECT_KEYS';
     }
 
     protected function parseField(Parser $parser): Node
