@@ -30,12 +30,12 @@ final class JsonModelTypeRegistry
      */
     public static function addType(string $name, string $className, bool $override = false): void
     {
-        if (!$override && array_key_exists($name, self::$typesMap)) {
+        if (!$override && \array_key_exists($name, self::$typesMap)) {
             throw Exception::typeExists($name);
         }
 
-        if (!class_exists($className) || !is_subclass_of($className, JsonModelType::class)) {
-            throw new Exception(sprintf('Type class name should be a subclass of %s. %s provided', JsonModelType::class, $className));
+        if (!\class_exists($className) || !\is_subclass_of($className, JsonModelType::class)) {
+            throw new Exception(\sprintf('Type class name should be a subclass of %s. %s provided', JsonModelType::class, $className));
         }
 
         self::$typesMap[$name] = $className;
@@ -43,7 +43,7 @@ final class JsonModelTypeRegistry
 
     public static function hasType(string $name): bool
     {
-        return array_key_exists($name, self::$typesMap);
+        return \array_key_exists($name, self::$typesMap);
     }
 
     /**

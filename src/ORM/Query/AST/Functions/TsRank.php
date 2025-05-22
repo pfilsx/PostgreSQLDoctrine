@@ -45,7 +45,7 @@ class TsRank extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return sprintf('TS_RANK(%s, %s%s)',
+        return \sprintf('TS_RANK(%s, %s%s)',
             $this->vector->dispatch($sqlWalker),
             $this->query->dispatch($sqlWalker),
             $this->normalization !== null ? ', ' . $this->normalization->dispatch($sqlWalker) : ''

@@ -69,7 +69,7 @@ class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaMana
             $sql .= ' c.relname AS table_name, n.nspname AS schema_name,';
         }
 
-        $sql .= sprintf(<<<'SQL'
+        $sql .= \sprintf(<<<'SQL'
             a.attnum,
             quote_ident(a.attname) AS field,
             t.typname AS type,
@@ -104,24 +104,24 @@ class PostgreSQLSchemaManager extends \Doctrine\DBAL\Schema\PostgreSQLSchemaMana
                         AND d.classid = (SELECT oid FROM pg_class WHERE relname = 'pg_class')
 SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
 
-        $conditions = array_merge([
+        $conditions = \array_merge([
             'a.attnum > 0',
             "c.relkind = 'r'",
             'd.refobjid IS NULL',
         ], $this->buildQueryConditions($tableName));
 
-        $sql .= ' WHERE ' . implode(' AND ', $conditions) . ' ORDER BY a.attnum';
+        $sql .= ' WHERE ' . \implode(' AND ', $conditions) . ' ORDER BY a.attnum';
 
         return $this->_conn->executeQuery($sql);
     }
 
     protected function _getPortableTableColumnDefinition($tableColumn): Column
     {
-        $tableColumn = array_change_key_case($tableColumn, CASE_LOWER);
+        $tableColumn = \array_change_key_case($tableColumn, CASE_LOWER);
 
-        if (strtolower($tableColumn['type']) === 'varchar' || strtolower($tableColumn['type']) === 'bpchar') {
+        if (\strtolower($tableColumn['type']) === 'varchar' || \strtolower($tableColumn['type']) === 'bpchar') {
             // get length from varchar definition
-            $length = preg_replace('~.*\(([0-9]*)\).*~', '$1', $tableColumn['complete_type']);
+            $length = \preg_replace('~.*\(([0-9]*)\).*~', '$1', $tableColumn['complete_type']);
             $tableColumn['length'] = $length;
         }
 
@@ -131,7 +131,7 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
 
         if (
             $tableColumn['default'] !== null
-            && preg_match("/^nextval\('(.*)'(::.*)?\)$/", $tableColumn['default'], $matches) === 1
+            && \preg_match("/^nextval\('(.*)'(::.*)?\)$/", $tableColumn['default'], $matches) === 1
         ) {
             $tableColumn['sequence'] = $matches[1];
             $tableColumn['default'] = null;
@@ -139,9 +139,9 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
         }
 
         if ($tableColumn['default'] !== null) {
-            if (preg_match("/^['(](.*)[')]::/", $tableColumn['default'], $matches) === 1) {
+            if (\preg_match("/^['(](.*)[')]::/", $tableColumn['default'], $matches) === 1) {
                 $tableColumn['default'] = $matches[1];
-            } elseif (preg_match('/^NULL::/', $tableColumn['default']) === 1) {
+            } elseif (\preg_match('/^NULL::/', $tableColumn['default']) === 1) {
                 $tableColumn['default'] = null;
             }
         }
@@ -169,13 +169,13 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
         $scale = null;
         $jsonb = null;
 
-        $dbType = strtolower($tableColumn['type']);
+        $dbType = \strtolower($tableColumn['type']);
         if (
             $tableColumn['domain_type'] !== null
             && $tableColumn['domain_type'] !== ''
             && !$this->_platform->hasDoctrineTypeMappingFor($tableColumn['type'])
         ) {
-            $dbType = strtolower($tableColumn['domain_type']);
+            $dbType = \strtolower($tableColumn['domain_type']);
             $tableColumn['complete_type'] = $tableColumn['domain_complete_type'];
         }
 
@@ -241,7 +241,7 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
                 $tableColumn['default'] = $this->fixVersion94NegativeNumericDefaultValue($tableColumn['default']);
 
                 if (
-                    preg_match(
+                    \preg_match(
                         '([A-Za-z]+\(([0-9]+),([0-9]+)\))',
                         $tableColumn['complete_type'],
                         $match,
@@ -267,7 +267,7 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
         }
 
         if (
-            $tableColumn['default'] !== null && preg_match(
+            $tableColumn['default'] !== null && \preg_match(
                 "('([^']+)'::)",
                 (string) $tableColumn['default'],
                 $match,
@@ -295,7 +295,7 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
         if ($tableColumn['is_enum']) {
             $enumClassName = $tableColumn['type_comment'] ?? null;
 
-            if ($enumClassName !== null && class_exists($enumClassName)) {
+            if ($enumClassName !== null && \class_exists($enumClassName)) {
                 $column->setEnumClass($enumClassName);
             }
         }
@@ -313,7 +313,7 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
                     %s not extending %s while being named %s is deprecated,
                     and will lead to jsonb never to being used in 4.0.,
                     DEPRECATION,
-                    get_class($column->getType()),
+                    \get_class($column->getType()),
                     JsonType::class,
                     Types::JSON,
                 );
@@ -329,14 +329,14 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
     {
         $list = [];
         foreach ($rawTypes as $rawType) {
-            $labels = json_decode($rawType['labels'], true);
-            usort($labels, static fn (array $a, array $b) => $a['order'] <=> $b['order']);
+            $labels = \json_decode($rawType['labels'], true);
+            \usort($labels, static fn (array $a, array $b) => $a['order'] <=> $b['order']);
 
-            $usages = json_decode($rawType['usages'], true);
+            $usages = \json_decode($rawType['usages'], true);
             foreach ($usages as &$usage) {
                 $default = $usage['default'] ?? null;
                 if ($default !== null) {
-                    $default = trim(explode('::', $default)[0], '\'');
+                    $default = \trim(\explode('::', $default)[0], '\'');
                 }
                 $usage['default'] = $default;
             }
@@ -344,8 +344,8 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
             $list[] = new EnumTypeAsset(
                 $rawType['name'],
                 $rawType['comment'],
-                array_column($labels, 'label'),
-                array_map(
+                \array_column($labels, 'label'),
+                \array_map(
                     static fn (array $usage) => new EnumTypeUsageAsset($usage['table'], $usage['column'], $usage['default']),
                     $usages
                 )
@@ -360,8 +360,8 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
         $conditions = [];
 
         if ($tableName !== null) {
-            if (str_contains($tableName, '.')) {
-                [$schemaName, $tableName] = explode('.', $tableName);
+            if (\str_contains($tableName, '.')) {
+                [$schemaName, $tableName] = \explode('.', $tableName);
                 $conditions[] = 'n.nspname = ' . $this->_platform->quoteStringLiteral($schemaName);
             } else {
                 $conditions[] = 'n.nspname = ANY(current_schemas(false))';
@@ -381,8 +381,8 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
      */
     private function fixVersion94NegativeNumericDefaultValue(mixed $defaultValue): mixed
     {
-        if ($defaultValue !== null && str_starts_with($defaultValue, '(')) {
-            return trim($defaultValue, '()');
+        if ($defaultValue !== null && \str_starts_with($defaultValue, '(')) {
+            return \trim($defaultValue, '()');
         }
 
         return $defaultValue;
@@ -397,6 +397,6 @@ SQL, $this->_platform->getDefaultColumnValueSQLSnippet());
             return null;
         }
 
-        return str_replace("''", "'", $default);
+        return \str_replace("''", "'", $default);
     }
 }

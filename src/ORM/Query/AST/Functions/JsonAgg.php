@@ -42,6 +42,6 @@ final class JsonAgg extends AbstractAggregateWithFilterFunction
 
     public function getFunctionSql(SqlWalker $sqlWalker): string
     {
-        return sprintf('JSON_AGG(%s%s)', $this->distinct ? 'DISTINCT ' : '', $this->expr->dispatch($sqlWalker));
+        return \sprintf('JSON_AGG(%s%s)', $this->distinct ? 'DISTINCT ' : '', $this->expr->dispatch($sqlWalker));
     }
 }

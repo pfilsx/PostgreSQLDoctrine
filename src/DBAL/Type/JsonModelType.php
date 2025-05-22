@@ -36,7 +36,7 @@ abstract class JsonModelType extends JsonType
             return null;
         }
 
-        if (!\is_object($value) || get_class($value) !== static::getModelClass()) {
+        if (!\is_object($value) || \get_class($value) !== static::getModelClass()) {
             throw ConversionException::conversionFailed($value, $this->getName());
         }
 

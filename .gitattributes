@@ -5,3 +5,6 @@
 /.github export-ignore
 /.php-cs-fixer.php export-ignore
 /docs export-ignore
+/docker export-ignore
+/docker-compose.yml
+/Makefile

@@ -62,12 +62,12 @@ final class EnumTool
             return;
         }
 
-        if (!\enum_exists($className) && (!\class_exists($className) || !is_subclass_of($className, EnumInterface::class))) {
-            throw new InvalidArgumentException(sprintf('Invalid enum className specified: %s. Enum class has to be a php8 enum or implements %s', $className, EnumInterface::class));
+        if (!\enum_exists($className) && (!\class_exists($className) || !\is_subclass_of($className, EnumInterface::class))) {
+            throw new InvalidArgumentException(\sprintf('Invalid enum className specified: %s. Enum class has to be a php8 enum or implements %s', $className, EnumInterface::class));
         }
 
-        if (enum_exists($className) && self::isIntBackedEnum($className)) {
-            throw new InvalidArgumentException(sprintf('Invalid enum className specified: %s. PostgreSQL supports only string values for enums', $className));
+        if (\enum_exists($className) && self::isIntBackedEnum($className)) {
+            throw new InvalidArgumentException(\sprintf('Invalid enum className specified: %s. PostgreSQL supports only string values for enums', $className));
         }
 
         self::$checkMap[$className] = true;
@@ -82,6 +82,6 @@ final class EnumTool
     {
         $fistCase = ($className::cases()[0] ?? null);
 
-        return $fistCase instanceof \BackedEnum && is_int($fistCase->value);
+        return $fistCase instanceof \BackedEnum && \is_int($fistCase->value);
     }
 }

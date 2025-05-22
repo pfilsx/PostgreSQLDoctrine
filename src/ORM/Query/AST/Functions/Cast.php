@@ -34,7 +34,7 @@ final class Cast extends FunctionNode
 
         $type = $parser->getLexer()->token['value'] ?? null;
 
-        if (!is_string($type)) {
+        if (!\is_string($type)) {
             return;
         }
 

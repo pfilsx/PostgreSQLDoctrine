@@ -97,7 +97,7 @@ final class EnumTypeAsset extends AbstractAsset
     public function getQuotedLabels(AbstractPlatform $platform): array
     {
         if (!$platform instanceof PostgreSQLPlatform) {
-            return array_map(static fn ($label) => $platform->quoteStringLiteral((string) $label), $this->labels);
+            return \array_map(static fn ($label) => $platform->quoteStringLiteral((string) $label), $this->labels);
         }
 
         $result = [];

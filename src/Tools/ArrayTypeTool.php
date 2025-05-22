@@ -55,10 +55,10 @@ final class ArrayTypeTool
             ArrayTypeEnum::SmallIntArray, ArrayTypeEnum::IntArray, ArrayTypeEnum::BigIntArray => self::convertIntPHPArrayToDatabaseArray($array, $type),
             ArrayTypeEnum::TextArray => self::convertStringPHPArrayToDatabaseArray($array),
             ArrayTypeEnum::BooleanArray => self::convertBooleanPHPArrayToDatabaseArray($array, $platform),
-            ArrayTypeEnum::JsonArray => array_map(static fn ($row) => '"' . addcslashes(json_encode($row), '"') . '"', $array),
+            ArrayTypeEnum::JsonArray => \array_map(static fn ($row) => '"' . \addcslashes(\json_encode($row), '"') . '"', $array),
         };
 
-        return '{' . implode(',', $preparedArray) . '}';
+        return '{' . \implode(',', $preparedArray) . '}';
     }
 
     /**
@@ -96,7 +96,7 @@ final class ArrayTypeTool
         $max = self::INT_RANGES[$type->value]['max'];
 
         foreach ($array as $key => $value) {
-            if (!is_int($value) && (!is_string($value) || !preg_match('/^-?\d+$/', $value))) {
+            if (!\is_int($value) && (!\is_string($value) || !\preg_match('/^-?\d+$/', $value))) {
                 throw new \InvalidArgumentException(\sprintf('Item at key %s has invalid type. Expected type "int", "%s" provided.', $key, \get_debug_type($value)));
             }
 
@@ -118,11 +118,11 @@ final class ArrayTypeTool
     private static function convertStringPHPArrayToDatabaseArray(array $array): array
     {
         foreach ($array as $key => &$value) {
-            if (!is_string($value)) {
+            if (!\is_string($value)) {
                 throw new \InvalidArgumentException(\sprintf('Item at key %s has invalid type. Expected type "string", "%s" provided.', $key, \get_debug_type($value)));
             }
 
-            $value = is_numeric($value) || ctype_digit($value) ? $value : '"' . \addcslashes($value, '"\\') . '"';
+            $value = \is_numeric($value) || \ctype_digit($value) ? $value : '"' . \addcslashes($value, '"\\') . '"';
         }
 
         return $array;
@@ -141,13 +141,13 @@ final class ArrayTypeTool
         }
 
         foreach ($array as $key => $value) {
-            if (is_bool($value) || (is_int($value) && in_array($value, [0, 1]))) {
+            if (\is_bool($value) || (\is_int($value) && \in_array($value, [0, 1]))) {
                 $array[$key] = $value ? 'true' : 'false';
 
                 continue;
             }
 
-            if (is_string($value) && array_key_exists($value, self::BOOL_LITERALS)) {
+            if (\is_string($value) && \array_key_exists($value, self::BOOL_LITERALS)) {
                 $array[$key] = self::BOOL_LITERALS[$value];
 
                 continue;
@@ -170,11 +170,11 @@ final class ArrayTypeTool
         $min = self::INT_RANGES[$type->value]['min'];
         $max = self::INT_RANGES[$type->value]['max'];
 
-        $array = explode(',', trim($value, '{}'));
+        $array = \explode(',', \trim($value, '{}'));
 
         foreach ($array as &$item) {
             if (!\preg_match('/^-?\d+$/', $item) || $item < $min || $item > $max) {
-                throw new \InvalidArgumentException(sprintf('Given array item with value "%s" cannot be converted to %s. Expected integer between %s and %s.', $item, $type->value, $min, $max));
+                throw new \InvalidArgumentException(\sprintf('Given array item with value "%s" cannot be converted to %s. Expected integer between %s and %s.', $item, $type->value, $min, $max));
             }
 
             $item = (int) $item;
@@ -190,7 +190,7 @@ final class ArrayTypeTool
      */
     private static function convertDatabaseArrayStringToStringPHPArray(string $value): array
     {
-        $array = \str_getcsv(\trim($value, '{}'));
+        $array = \str_getcsv(\trim($value, '{}'), escape: '\\');
 
         foreach ($array as $key => $item) {
             if ($item === 'null') {
@@ -213,17 +213,17 @@ final class ArrayTypeTool
      */
     private static function convertDatabaseArrayStringToBoolPHPArray(string $value, ?AbstractPlatform $platform): array
     {
-        $array = explode(',', trim($value, '{}'));
+        $array = \explode(',', \trim($value, '{}'));
 
         if ($platform !== null) {
-            return array_map(
+            return \array_map(
                 static fn ($item): ?bool => $platform->convertFromBoolean($item),
                 $array
             );
         }
 
         foreach ($array as &$item) {
-            $lowerItem = strtolower(trim($item, '"\''));
+            $lowerItem = \strtolower(\trim($item, '"\''));
             $item = (self::BOOL_LITERALS[$lowerItem] ?? $lowerItem) !== 'false' && (bool) $lowerItem;
         }
 
@@ -232,8 +232,8 @@ final class ArrayTypeTool
 
     private static function convertDatabaseArrayJsonStringToPHPArray(string $value): array
     {
-        return json_decode(
-            '[' . stripcslashes(preg_replace('/\"(\{.+\})\"/U', '$1', trim($value, '{}'))) . ']',
+        return \json_decode(
+            '[' . \stripcslashes(\preg_replace('/\"(\{.+\})\"/U', '$1', \trim($value, '{}'))) . ']',
             true,
             512,
             JSON_THROW_ON_ERROR | JSON_BIGINT_AS_STRING

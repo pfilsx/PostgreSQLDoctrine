@@ -47,12 +47,12 @@ class JsonGetField extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return sprintf(
+        return \sprintf(
             '%s->%s',
             $this->field->dispatch($sqlWalker),
-            implode(
+            \implode(
                 '->',
-                array_map(static fn (Node $node) => $node->dispatch($sqlWalker), $this->path)
+                \array_map(static fn (Node $node) => $node->dispatch($sqlWalker), $this->path)
             )
         );
     }

@@ -40,7 +40,7 @@ abstract class AbstractToTsFunction extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return sprintf('%s(%s%s)',
+        return \sprintf('%s(%s%s)',
             $this->getFunctionName(),
             $this->config !== null ? $this->config->dispatch($sqlWalker) . ', ' : '',
             $this->document->dispatch($sqlWalker)

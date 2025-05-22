@@ -81,10 +81,10 @@ class PostgreSQLPlatform extends BasePlatform
         $result = [];
         $typeName = $to->getQuotedName($this);
 
-        $removedLabels = array_diff($fromLabels, $toLabels);
+        $removedLabels = \array_diff($fromLabels, $toLabels);
 
-        if (count($removedLabels) < 1) {
-            foreach (array_diff($toLabels, $fromLabels) as $label) {
+        if (\count($removedLabels) < 1) {
+            foreach (\array_diff($toLabels, $fromLabels) as $label) {
                 $result[] = "ALTER TYPE {$typeName} ADD VALUE {$this->quoteEnumLabel($label)}";
             }
 
@@ -99,9 +99,9 @@ class PostgreSQLPlatform extends BasePlatform
             $tableName = $usage->getQuotedTableName($this);
             $columnName = $usage->getQuotedColumnName($this);
             if (($default = $usage->getDefault()) !== null) {
-                $result[] = sprintf('ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT', $tableName, $columnName);
+                $result[] = \sprintf('ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT', $tableName, $columnName);
             }
-            $result[] = sprintf(
+            $result[] = \sprintf(
                 'ALTER TABLE %1$s ALTER COLUMN %2$s TYPE %3$s USING (%2$s::text)::%3$s',
                 $tableName,
                 $columnName,
@@ -109,7 +109,7 @@ class PostgreSQLPlatform extends BasePlatform
             );
 
             if ($default !== null) {
-                $result[] = sprintf(
+                $result[] = \sprintf(
                     'ALTER TABLE %s ALTER COLUMN %s SET DEFAULT %s',
                     $tableName,
                     $columnName,
@@ -146,11 +146,11 @@ class PostgreSQLPlatform extends BasePlatform
         $type1 = $column1->getType();
         $type2 = $column2->getType();
 
-        if (!is_subclass_of($type1, JsonModelType::class) && !is_subclass_of($type2, JsonModelType::class)) {
+        if (!\is_subclass_of($type1, JsonModelType::class) && !\is_subclass_of($type2, JsonModelType::class)) {
             return false;
         }
 
-        return is_subclass_of($type1, $type2::class) || is_subclass_of($type2, $type1::class);
+        return \is_subclass_of($type1, $type2::class) || \is_subclass_of($type2, $type1::class);
     }
 
     public function getDefaultColumnValueSQLSnippet(): string

@@ -37,10 +37,10 @@ abstract class AbstractJsonBuildFunction extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return sprintf(
+        return \sprintf(
             '%s(%s)',
             $this->getFunctionName(),
-            implode(',', array_map(static fn (Node $node) => $node->dispatch($sqlWalker), $this->elements))
+            \implode(',', \array_map(static fn (Node $node) => $node->dispatch($sqlWalker), $this->elements))
         );
     }
 }
