@@ -9,9 +9,12 @@ use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 use Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\FilterExpression;
+use Pfilsx\PostgreSQLDoctrine\ORM\Trait\VariadicTokenTrait;
 
 abstract class AbstractAggregateWithFilterFunction extends FunctionNode
 {
+    use VariadicTokenTrait;
+
     private const FILTER_IDENTIFIER = 'FILTER';
     private ?FilterExpression $filterExpression = null;
 
@@ -25,7 +28,7 @@ abstract class AbstractAggregateWithFilterFunction extends FunctionNode
             return;
         }
 
-        $lookaheadValue = $lexer->lookahead?->value;
+        $lookaheadValue = $this->getTokenField($lexer->lookahead, 'value');
 
         if (!\is_string($lookaheadValue) || \mb_strtoupper($lookaheadValue) !== self::FILTER_IDENTIFIER) {
             return;

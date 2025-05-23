@@ -9,6 +9,7 @@ use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Pfilsx\PostgreSQLDoctrine\ORM\Trait\VariadicTokenTrait;
 
 /**
  * Implementation of PostgreSql CAST() function.
@@ -19,6 +20,8 @@ use Doctrine\ORM\Query\SqlWalker;
  */
 final class Cast extends FunctionNode
 {
+    use VariadicTokenTrait;
+
     public Node $source;
 
     public string $type;
@@ -32,7 +35,7 @@ final class Cast extends FunctionNode
         $parser->match(Lexer::T_AS);
         $parser->match(Lexer::T_IDENTIFIER);
 
-        $type = $parser->getLexer()->token?->value;
+        $type = $this->getTokenField($parser->getLexer()->token, 'value');
 
         if (!\is_string($type)) {
             return;

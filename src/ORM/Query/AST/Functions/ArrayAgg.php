@@ -11,6 +11,7 @@ use Doctrine\ORM\Query\AST\TypedExpression;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Pfilsx\PostgreSQLDoctrine\ORM\Trait\VariadicTokenTrait;
 
 /**
  * Implementation of PostgreSql ARRAY_AGG() function.
@@ -26,6 +27,8 @@ use Doctrine\ORM\Query\SqlWalker;
  */
 final class ArrayAgg extends AbstractAggregateWithFilterFunction implements TypedExpression
 {
+    use VariadicTokenTrait;
+
     private bool $distinct = false;
 
     private Node $expr;
@@ -49,7 +52,7 @@ final class ArrayAgg extends AbstractAggregateWithFilterFunction implements Type
             $parser->match(Lexer::T_COMMA);
             $parser->match(Lexer::T_STRING);
 
-            $this->returnType = $lexer->token?->value;
+            $this->returnType = $this->getTokenField($lexer->token, 'value');
         }
 
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);

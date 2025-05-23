@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pfilsx\PostgreSQLDoctrine\ORM\Query\AST;
 
+use Doctrine\Common\Lexer\Token;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
@@ -34,7 +35,13 @@ final class ArrayExpression extends Node
         \assert($lexer->lookahead !== null);
         $nodes = [];
 
-        switch ($lexer->lookahead->type) {
+        if (\class_exists(Token::class) && $lexer->lookahead instanceof Token) {
+            $type = $lexer->lookahead->type;
+        } else {
+            $type = $lexer->lookahead['type'] ?? null;
+        }
+
+        switch ($type) {
             case Lexer::T_INPUT_PARAMETER:
                 $nodes[] = $parser->InputParameter();
 

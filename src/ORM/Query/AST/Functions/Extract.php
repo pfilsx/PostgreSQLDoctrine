@@ -9,6 +9,7 @@ use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Pfilsx\PostgreSQLDoctrine\ORM\Trait\VariadicTokenTrait;
 
 /**
  * Implementation of PostgreSql EXTRACT function.
@@ -20,6 +21,7 @@ use Doctrine\ORM\Query\SqlWalker;
  */
 class Extract extends FunctionNode
 {
+    use VariadicTokenTrait;
     private string $expr;
 
     private Node $from;
@@ -30,7 +32,7 @@ class Extract extends FunctionNode
         $parser->match(Lexer::T_OPEN_PARENTHESIS);
 
         $parser->match(Lexer::T_IDENTIFIER);
-        $this->expr = $parser->getLexer()->token?->value;
+        $this->expr = $this->getTokenField($parser->getLexer()->token, 'value');
         $parser->match(Lexer::T_FROM);
 
         $this->from = $parser->StringPrimary();
