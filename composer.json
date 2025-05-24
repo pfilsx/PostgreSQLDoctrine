@@ -36,13 +36,10 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.13",
-        "doctrine/orm": "^2.13.0",
+        "doctrine/orm": "^2.13",
         "symfony/serializer": ">=5.4",
         "symfony/property-info": ">=5.4",
         "phpunit/phpunit": "^10.0",
         "symfony/property-access": ">=5.4"
-    },
-    "conflict": {
-        "doctrine/orm": ">=2.18.0"
     }
 }

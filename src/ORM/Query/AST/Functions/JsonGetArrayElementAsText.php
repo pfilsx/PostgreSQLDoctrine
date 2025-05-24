@@ -7,6 +7,7 @@ namespace Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions;
 use Doctrine\ORM\Query\AST\Literal;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
+use Pfilsx\PostgreSQLDoctrine\ORM\Trait\VariadicTokenTrait;
 
 /**
  * Implementation of PostgreSql JSON(B) array field retrieval by index.
@@ -15,8 +16,10 @@ use Doctrine\ORM\Query\Parser;
  *
  * @example JSON_GET_ARRAY_ELEMENT_AS_TEXT(entity.field, 1)
  */
-final class JsonGetArrayElementAsText extends JsonGetFieldAsText
+class JsonGetArrayElementAsText extends JsonGetFieldAsText
 {
+    use VariadicTokenTrait;
+
     public function parse(Parser $parser): void
     {
         $parser->match(Lexer::T_IDENTIFIER);
@@ -26,14 +29,14 @@ final class JsonGetArrayElementAsText extends JsonGetFieldAsText
         $parser->match(Lexer::T_COMMA);
 
         $parser->match(Lexer::T_INTEGER);
-        $this->path[] = new Literal(Literal::NUMERIC, $parser->getLexer()->token['value']);
+        $this->path[] = new Literal(Literal::NUMERIC, $this->getTokenField($parser->getLexer()->token, 'value'));
 
         if (!$parser->getLexer()->isNextToken(Lexer::T_CLOSE_PARENTHESIS)) {
             while ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
                 $parser->match(Lexer::T_COMMA);
 
                 $parser->match(Lexer::T_INTEGER);
-                $this->path[] = new Literal(Literal::NUMERIC, $parser->getLexer()->token['value']);
+                $this->path[] = new Literal(Literal::NUMERIC, $this->getTokenField($parser->getLexer()->token, 'value'));
             }
         }
 

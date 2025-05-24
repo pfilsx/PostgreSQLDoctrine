@@ -26,3 +26,6 @@ test-deprecations:
 
 test-with-coverage:
 	@docker-compose exec -e XDEBUG_MODE=coverage -ti php vendor/bin/phpunit --coverage-html var
+
+sh:
+	@docker-compose exec -ti php /bin/sh
