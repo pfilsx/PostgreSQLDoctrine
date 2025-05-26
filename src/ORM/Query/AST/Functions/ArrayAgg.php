@@ -8,9 +8,9 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\AST\TypedExpression;
-use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Pfilsx\PostgreSQLDoctrine\Enum\TokenType;
 use Pfilsx\PostgreSQLDoctrine\ORM\Trait\VariadicTokenTrait;
 
 /**
@@ -37,25 +37,25 @@ final class ArrayAgg extends AbstractAggregateWithFilterFunction implements Type
 
     public function parseFunction(Parser $parser): void
     {
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
+        $parser->match(TokenType::T_IDENTIFIER);
+        $parser->match(TokenType::T_OPEN_PARENTHESIS);
 
         $lexer = $parser->getLexer();
-        if ($lexer->isNextToken(Lexer::T_DISTINCT)) {
-            $parser->match(Lexer::T_DISTINCT);
+        if ($lexer->isNextToken(TokenType::T_DISTINCT)) {
+            $parser->match(TokenType::T_DISTINCT);
             $this->distinct = true;
         }
 
         $this->expr = $parser->StringPrimary();
 
-        if ($lexer->isNextToken(Lexer::T_COMMA)) {
-            $parser->match(Lexer::T_COMMA);
-            $parser->match(Lexer::T_STRING);
+        if ($lexer->isNextToken(TokenType::T_COMMA)) {
+            $parser->match(TokenType::T_COMMA);
+            $parser->match(TokenType::T_STRING);
 
             $this->returnType = $this->getTokenField($lexer->token, 'value');
         }
 
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 
     public function getFunctionSql(SqlWalker $sqlWalker): string

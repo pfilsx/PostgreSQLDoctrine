@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
-use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Pfilsx\PostgreSQLDoctrine\Enum\TokenType;
 use Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\FilterExpression;
 use Pfilsx\PostgreSQLDoctrine\ORM\Trait\VariadicTokenTrait;
 
@@ -24,7 +24,7 @@ abstract class AbstractAggregateWithFilterFunction extends FunctionNode
 
         $lexer = $parser->getLexer();
 
-        if (!$lexer->isNextToken(Lexer::T_IDENTIFIER)) {
+        if (!$lexer->isNextToken(TokenType::T_IDENTIFIER)) {
             return;
         }
 
@@ -34,12 +34,12 @@ abstract class AbstractAggregateWithFilterFunction extends FunctionNode
             return;
         }
 
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
+        $parser->match(TokenType::T_IDENTIFIER);
+        $parser->match(TokenType::T_OPEN_PARENTHESIS);
 
         $this->filterExpression = new FilterExpression($parser->WhereClause());
 
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 
     abstract public function parseFunction(Parser $parser): void;
