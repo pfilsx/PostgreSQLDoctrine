@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Pfilsx\PostgreSQLDoctrine\ORM\Query\AST\Functions;
 
 use Doctrine\ORM\Query\AST\Literal;
-use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
+use Pfilsx\PostgreSQLDoctrine\Enum\TokenType;
 use Pfilsx\PostgreSQLDoctrine\ORM\Trait\VariadicTokenTrait;
 
 /**
@@ -22,22 +22,22 @@ class JsonGetArrayElement extends JsonGetField
 
     public function parse(Parser $parser): void
     {
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
+        $parser->match(TokenType::T_IDENTIFIER);
+        $parser->match(TokenType::T_OPEN_PARENTHESIS);
         $this->field = $parser->StringPrimary();
-        $parser->match(Lexer::T_COMMA);
+        $parser->match(TokenType::T_COMMA);
 
-        $parser->match(Lexer::T_INTEGER);
+        $parser->match(TokenType::T_INTEGER);
         $this->path[] = new Literal(Literal::NUMERIC, $this->getTokenField($parser->getLexer()->token, 'value'));
 
-        if (!$parser->getLexer()->isNextToken(Lexer::T_CLOSE_PARENTHESIS)) {
-            while ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
-                $parser->match(Lexer::T_COMMA);
+        if (!$parser->getLexer()->isNextToken(TokenType::T_CLOSE_PARENTHESIS)) {
+            while ($parser->getLexer()->isNextToken(TokenType::T_COMMA)) {
+                $parser->match(TokenType::T_COMMA);
 
-                $parser->match(Lexer::T_INTEGER);
+                $parser->match(TokenType::T_INTEGER);
                 $this->path[] = new Literal(Literal::NUMERIC, $this->getTokenField($parser->getLexer()->token, 'value'));
             }
         }
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 }

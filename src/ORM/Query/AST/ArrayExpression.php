@@ -6,8 +6,8 @@ namespace Pfilsx\PostgreSQLDoctrine\ORM\Query\AST;
 
 use Doctrine\Common\Lexer\Token;
 use Doctrine\ORM\Query\AST\Node;
-use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
+use Pfilsx\PostgreSQLDoctrine\Enum\TokenType;
 
 final class ArrayExpression extends Node
 {
@@ -42,18 +42,18 @@ final class ArrayExpression extends Node
         }
 
         switch ($type) {
-            case Lexer::T_INPUT_PARAMETER:
+            case TokenType::T_INPUT_PARAMETER:
                 $nodes[] = $parser->InputParameter();
 
                 break;
-            case Lexer::T_INTEGER:
-            case Lexer::T_FLOAT:
-            case Lexer::T_TRUE:
-            case Lexer::T_FALSE:
-            case Lexer::T_STRING:
+            case TokenType::T_INTEGER:
+            case TokenType::T_FLOAT:
+            case TokenType::T_TRUE:
+            case TokenType::T_FALSE:
+            case TokenType::T_STRING:
                 $nodes[] = $parser->Literal();
-                while ($lexer->isNextToken(Lexer::T_COMMA)) {
-                    $parser->match(Lexer::T_COMMA);
+                while ($lexer->isNextToken(TokenType::T_COMMA)) {
+                    $parser->match(TokenType::T_COMMA);
                     $nodes[] = $parser->Literal();
                 }
 
