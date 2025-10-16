@@ -6,5 +6,5 @@
 /.php-cs-fixer.php export-ignore
 /docs export-ignore
 /docker export-ignore
-/docker-compose.yml
-/Makefile
+/docker-compose.yml export-ignore
+/Makefile export-ignore
