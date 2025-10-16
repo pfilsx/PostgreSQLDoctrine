@@ -26,7 +26,7 @@ Features
 Requirement
 -----------
 * PHP ^8.1
-* doctrine/dbal ^3.5.1
+* doctrine/dbal ^3.5.1|^4.0
 * doctrine/migrations ^3.5.2
 * symfony/serializer >=5.4.* (optional for json models)
 * symfony/property-info >=5.4.* (optional for json models)
